@@ -8,6 +8,22 @@
     height: 100vh;
 }
 
+#right_panel {
+    display: flex;
+    flex-direction: column;
+}
+
+#infos {
+    width: 100%;
+    padding: 10% 0;
+    flex-grow: 1;
+    text-align: center; 
+
+    button {
+        margin: 10%;
+    }
+}
+
 .no_padding
 {
     padding: 0 !important;

@@ -23,14 +23,15 @@
                 </lmap>
             </div>
 
-            <div class="col-md-4 no_padding">
+            <div id="right_panel" class="col-md-4 no_padding">
                 <!-- Right Menu -->
                 <div>
                     <img class="img-fluid" src="place_stan.jpg"/>
                 </div>
-                <div>
+                <div id="infos">
                     <h2>Score : {{score}}</h2>
                     <button v-if="has_played" @click="next_round">Photo suivante !</button>
+                    <p v-if="has_played" class='alert alert-success'>bien joué</p>
                 </div>
             </div>
         </div>
@@ -56,15 +57,11 @@
                 index_img: 0,
                 score: 0,
                 difficulty: 500
-
-            },
-
-            mounted() { 
-            
             },
 
             methods: { 
                 create_game(){
+
 
                 },
 
@@ -81,7 +78,7 @@
                     }
                     this.has_played = true;
                 },
-                
+
                 next_round(){
                     this.has_played = false;
                     this.index_img++;
