@@ -6,9 +6,9 @@
         <title>GeoQuizz</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
-        <link rel="stylesheet" type="text/css" href="./style/bootstrap-grid.min.css">
-        <link rel="stylesheet" type="text/css" href="./style/bootstrap-reboot.min.css">
-        <link rel="stylesheet" type="text/css" href="./style/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="./style/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="./style/css/bootstrap-grid.min.css">
+        <link rel="stylesheet" type="text/css" href="./style/css/bootstrap-reboot.min.css">  
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" />
         <link rel="stylesheet" type="text/css" href="./style/css/player.css">
         <script src="./script/bootstrap.bundle.min.js"></script> 
@@ -17,19 +17,20 @@
 
     <body>
         <div id="app">
-            <div class="col-md-9 no_padding">
+            <div class="col-md-8 no_padding">
                 <!-- MAP -->
                 <lmap>
                 </lmap>
             </div>
 
-            <div class="col-md-3 no_padding">
+            <div class="col-md-4 no_padding">
                 <!-- Right Menu -->
                 <div>
-                    <img src="place_stan.jpg"/>
+                    <img class="img-fluid" src="place_stan.jpg"/>
                 </div>
                 <div>
-                    <p>Test</p>
+                    <h2>Score : {{score}}</h2>
+                    <button v-if="has_played" @click="next_round">Photo suivante !</button>
                 </div>
             </div>
         </div>
@@ -42,6 +43,19 @@
         new Vue({
             el: '#app',
             data: { 
+                game_id: '',
+                token: '',
+                has_played: false,
+                images: [
+                    {
+                        url:"place_stan.jpg", 
+                        lat: '48.6935244', 
+                        lng:'6.1832861'
+                    }
+                ],
+                index_img: 0,
+                score: 0,
+                difficulty: 500
 
             },
 
@@ -50,7 +64,50 @@
             },
 
             methods: { 
+                create_game(){
+
+                },
+
+                submit_choice(latlng){
+                    let distance = this.distance(latlng['lat'],latlng['lng'],this.images[this.index_img]['lat'],this.images[this.index_img]['lng']);
+                    if(distance < this.difficulty){
+                        this.score += 5;
+                    }
+                    else if(distance < 2*this.difficulty){
+                        this.score += 3;
+                    }
+                    else if(distance < 3*this.difficulty){
+                        this.score += 1;
+                    }
+                    this.has_played = true;
+                },
                 
+                next_round(){
+                    this.has_played = false;
+                    this.index_img++;
+                },
+
+                distance(lat1, lng1, lat2, lng2){
+                    let earth_radius = 6378137;   // Terre = sphère de 6378km de rayon
+                    let rlo1 = this.deg2rad(lng1);
+                    let rla1 = this.deg2rad(lat1);
+                    let rlo2 = this.deg2rad(lng2);
+                    let rla2 = this.deg2rad(lat2);
+                    let dlo = (rlo2 - rlo1) / 2;
+                    let dla = (rla2 - rla1) / 2;
+                    let a = (Math.sin(dla) * Math.sin(dla)) + Math.cos(rla1) * Math.cos(rla2) * (Math.sin(dlo) * Math.sin(dlo));
+                    let d = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                    let meter = (earth_radius * d);
+
+                    return meter;
+                },
+
+                deg2rad(degrees)
+                {
+                    var pi = Math.PI;
+                    return degrees * (pi/180);
+                }
+
             },
         });
         </script>  
