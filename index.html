@@ -6,28 +6,39 @@
         <title>GeoQuizz</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
-        <link rel="stylesheet" type="text/css" href="./style/bootstrap-grid.min.css">
-        <link rel="stylesheet" type="text/css" href="./style/bootstrap-reboot.min.css">
-        <link rel="stylesheet" type="text/css" href="./style/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="./style/css/bootstrap-grid.min.css">
+        <link rel="stylesheet" type="text/css" href="./style/css/bootstrap-reboot.min.css">
+        <link rel="stylesheet" type="text/css" href="./style/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" />
         <link rel="stylesheet" type="text/css" href="./style/css/player.css">
+        <script src="./script/jquery.min.js"></script> 
         <script src="./script/bootstrap.bundle.min.js"></script> 
         <script src="./script/bootstrap.min.js"></script> 
     </head>
 
     <body>
         <div id="app">
-            <div class="col-md-9 no_padding">
+            <div class="col-md-8 no_padding">
                 <!-- MAP -->
                 <lmap>
                 </lmap>
             </div>
 
-            <div class="col-md-3 no_padding">
+            <div class="col-md-4 no_padding">
                 <!-- Right Menu -->
                 <div>
-                    <img src="place_stan.jpg"/>
+                    <img v-on:click="enlargedImage = true" class="img-fluid searchedImage" src="place_stan.jpg"/>
+                    
+                    <div v-if="enlargedImage" class="modal-container">
+                            <div v-on:click="enlargedImage = false" class="modal-body">
+                                <slot name="body">
+                                    <img v-on:click="enlargedImage = true" class="img-fluid enlargedImage" src="place_stan.jpg"/>
+                                </slot>
+                            </div>
+                    </div>
                 </div>
+
+
                 <div>
                     <p>Test</p>
                 </div>
@@ -42,6 +53,7 @@
             new Vue({
                 el: '#app',
                 data: { 
+                    enlargedImage: false
 
                 },
 
@@ -49,8 +61,8 @@
                 
                 },
 
-                methods: { 
-                    
+                methods: {
+
                 },
             });
         </script>  
