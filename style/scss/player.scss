@@ -1,0 +1,16 @@
+@import 'reset';
+
+#app {
+    display:flex;
+}
+
+#map{
+    height: 100vh;
+}
+
+.no_padding
+{
+    padding: 0 !important;
+    margin: 0 !important;
+
+}
