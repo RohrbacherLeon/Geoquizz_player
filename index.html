@@ -31,9 +31,7 @@
                     
                     <div v-if="enlargedImage" class="modal-container">
                             <div v-on:click="enlargedImage = false" class="modal-body">
-                                <slot name="body">
-                                    <img v-on:click="enlargedImage = true" class="img-fluid enlargedImage" src="place_stan.jpg"/>
-                                </slot>
+                                <img v-on:click="enlargedImage = true" class="img-fluid enlargedImage" src="place_stan.jpg"/>
                             </div>
                     </div>
                 </div>
