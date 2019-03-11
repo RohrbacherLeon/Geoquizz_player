@@ -12,9 +12,8 @@ Vue.component('lmap',{
         return{
             map: null,
             tileLayer: null,
-            layers: [
-            ],
-            selectedPoint:null
+            layers: [],
+            selectedMarker: {}
         }
     },
 
@@ -25,14 +24,12 @@ Vue.component('lmap',{
         this.map.on('click', (e) => {
             console.log(e.latlng);
 
-            if(this.selectedPoint != null){
-                this.map.removeLayer(L.marker(this.selectedPoint));
-                this.selectedPoint = null;
+            if(this.selectedMarker != undefined){
+                this.map.removeLayer(this.selectedMarker);
+                this.selectedMarker = null;
             }
 
-            this.selectedPoint = e.latlng;
-
-            let marker = L.marker(this.selectedPoint).addTo(this.map);
+            this.selectedMarker = L.marker(e.latlng).addTo(this.map);
         });
     },
 
