@@ -30,6 +30,7 @@ Vue.component('lmap',{
             }
 
             this.selectedMarker = L.marker(e.latlng).addTo(this.map);
+            this.$parent.submit_choice(e.latlng)
         });
     },
 
