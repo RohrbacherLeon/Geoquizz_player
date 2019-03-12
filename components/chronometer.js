@@ -1,6 +1,6 @@
 Vue.component('chronometer',{
     template:`
-        <span id="chronotime">0:00:00:00</span>  
+        <span class="text-danger" id="chronotime">0:00:00:00</span>  
     `,
 
     data(){

@@ -197,6 +197,7 @@
                     this.$children[0].clearMap();
                     this.$children[1].chronoReset();
                     this.$children[1].chronoStart();
+                    document.getElementById('chronotime').className = "text-danger"; //Change timer color to red
                 },
 
                 validate_choice(){
@@ -207,6 +208,7 @@
                     this.time.sec = time.getSeconds();
                     this.time.min = time.getMinutes();
                     this.time.hr = time.getHours()-1;
+                    document.getElementById('chronotime').className = "text-success"; //Change timer color to green
                 },
 
                 axiosGet(urlSend){
