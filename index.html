@@ -38,7 +38,7 @@
 
                 <div id="infos">
                     <h2>Score : {{score}}</h2>
-                    <button v-if="has_played" @click="next_round">Photo suivante !</button>
+                    <button v-if="has_played" class="btn btn-secondary btn-lg" @click="next_round">Photo suivante !</button>
                     <p v-if="has_played" class='alert alert-success'>Bien joué, la distance est de {{distanceBetween}}km</p>
                     <button v-if="isSelected" @click="this.$children[0].validate_choice" class="btn btn-primary btn-lg">Valider le choix</button>
                 </div>
