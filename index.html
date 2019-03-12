@@ -67,9 +67,9 @@
                         <chronometer></chronometer>
                         <h2>Score : {{score}}</h2>
                         <button v-if="has_played" class="btn btn-secondary btn-lg" @click="next_round">Photo suivante !</button>
-                        <p v-if="has_played" class='alert alert-success'>Bien joué, la distance est de {{distanceBetween}}km</p>
+                        <p v-if="has_played" class='alert alert-success'>Bien joué, la distance est de {{distanceBetween}}km, trouvé en {{time.min}} minutes, {{time.sec}} secondes et {{time.msec}} ms.</p>
                         <p v-if="has_played" class=''>Le lieu était {{this.images[index_img].desc}}</p>
-                        <button v-if="isSelected" @click="this.$children[0].validate_choice" class="btn btn-primary btn-lg">Valider le choix</button>
+                        <button v-if="isSelected" @click="validate_choice" class="btn btn-primary btn-lg">Valider le choix</button>
                     </div>
                 </div>
             </div>
@@ -115,7 +115,12 @@
                 distanceBetween: 0,
                 score: 0,
                 difficulty: 500,
-                time: 0,
+                time: {
+                    sec:0,
+                    min:0,
+                    hr:0,
+                    msec:0
+                },
                 //Map
                 map_data:{
                     map_lat:48.6937223,
@@ -190,6 +195,18 @@
                     this.has_played = false;
                     this.index_img++;
                     this.$children[0].clearMap();
+                    this.$children[1].chronoReset();
+                    this.$children[1].chronoStart();
+                },
+
+                validate_choice(){
+                    this.$children[0].validate_choice();
+                    this.$children[1].chronoStop();
+                    let time = this.$children[1].diff;
+                    this.time.msec = time.getMilliseconds();
+                    this.time.sec = time.getSeconds();
+                    this.time.min = time.getMinutes();
+                    this.time.hr = time.getHours()-1;
                 },
 
                 axiosGet(urlSend){
