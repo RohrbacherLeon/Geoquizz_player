@@ -15,6 +15,7 @@
         background-color: rgba(0, 0, 0, .5);
         
         .enlargedImage{
+            user-select: none !important;
             position: fixed;
             top: 50%;
             left: 50%;
@@ -28,4 +29,5 @@
 
 .searchedImage{
     cursor: zoom-in;
+    user-select: none !important;
 }
