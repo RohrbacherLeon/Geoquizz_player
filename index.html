@@ -18,11 +18,38 @@
 
     <body>
         <div id="app">
-            <div class="col-md-8 no_padding">
-                <!-- MAP -->
-                <lmap>
-                </lmap>
+            <div v-if="!has_started" id="header">
+                <div class="col-md-10 no_padding">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <input type="text" class="form-control" v-model="pseudo" placeholder="Pseudo" id="inputPseudo">
+                        </div>
+                        <div class="form-group col-md-3">
+                                <select id="inputSerie" v-model="serie" class="form-control">
+                                    <option value="" disabled selected>Série</option>
+                                    <option value="1">Nancy</option>
+                                    <option value="2">France</option>
+                                    <option value="3">Monde</option>
+                                </select>
+                            </div>
+                        <div class="form-group col-md-3">
+                            <select id="inputDifficulty" v-model="dificulty" class="form-control">
+                                <option value="1" selected>Facile</option>
+                                <option value="2">Moyen</option>
+                                <option value="3">Dificile</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" v-on:click="create_game" class="btn btn-primary">New Game</button>
+                </div>
             </div>
+            <div id="player" v-if="has_started">
+                <div class="col-md-8 no_padding">
+                    <!-- MAP -->
+                    <lmap>
+                    </lmap>
+                </div>
 
             <div id="right_panel" class="col-md-4 no_padding">
                 <!-- Right Menu -->
@@ -44,7 +71,7 @@
                     <button v-if="isSelected" @click="this.$children[0].validate_choice" class="btn btn-primary btn-lg">Valider le choix</button>
                 </div>
             </div>
-        </div>
+        </div>  
 
 
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
@@ -56,6 +83,12 @@
         new Vue({
             el: '#app',
             data: { 
+                has_started: false,
+                create_game_error: '',
+                pseudo: '',
+                serie: '',
+                dificulty: '',
+                
                 enlargedImage: false,
                 game_id: '',
                 token: '',
@@ -90,8 +123,21 @@
                 }
             },
 
+
             methods: { 
                 create_game(){
+                    if(this.pseudo !== "")
+                        document.getElementById("inputPseudo").classList.remove("is-invalid");
+                    else
+                        document.getElementById("inputPseudo").classList.add("is-invalid");
+                    
+                    if(this.serie !== "")
+                        document.getElementById("inputSerie").classList.remove("is-invalid");
+                    else
+                        document.getElementById("inputSerie").classList.add("is-invalid");
+                    
+                    if((this.serie !== "") && (this.pseudo !== ""))
+                        this.has_started = true;
                 },
 
                 submit_choice(latlng){
