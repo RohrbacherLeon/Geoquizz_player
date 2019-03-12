@@ -141,14 +141,31 @@
                     
                     if((this.serie !== "") && (this.pseudo !== "")){
                         let urlSend = 'http://bb3a714b.ngrok.io/parties';
-                        //this.axiosPost(urlSend, {joueur: this.pseudo});
-                        this.has_started = true;
+                        let partie;
+                        axios.post(urlSend,{joueur: this.pseudo, serie: {id:1 }}).then( (response) => {
+                            partie = response.data;
+                            axios.get("http://bb3a714b.ngrok.io/series/"+"1"+'/photos').then((response) => {
+                                // handle success
+                                this.images = response.data;
+                                console.log(this.has_started )
+                                this.has_started = true;
+                                console.log(this.has_started )
+                            })
+                            .catch(function (error) {
+                                // handle error
+                                console.log(error);
+                            })
+                        })
+                        .catch(function (error) {
+                            // handle error
+                            console.log(error);
+                        })
                     }
                 },
 
                 submit_choice(latlng){
                     this.isSelected = false;
-                    let distance = this.distance(latlng['lat'],latlng['lng'],this.images[this.index_img]['lat'],this.images[this.index_img]['lng']);
+                    let distance = this.distance(latlng['lat'],latlng['lng'],this.images[this.index_img]['latitude'],this.images[this.index_img]['longitude']);
                     if(distance < this.difficulty){
                         this.score += 5;
                     }
@@ -190,10 +207,10 @@
                     this.$children[0].clearMap();
                 },
 
-                axiosGet(urlSend){
-                    axios.get(urlSend).then(function (response) {
+                axiosGet(urlSend, params){
+                    axios.get(urlSend, params).then(function (response) {
                         // handle success
-                        console.log(response);
+                        return response;
                     })
                     .catch(function (error) {
                         // handle error
@@ -204,7 +221,7 @@
                 axiosPost(urlSend, params){
                     axios.post(urlSend,params).then(function (response) {
                         // handle success
-                        console.log(response);
+                        return response;
                     })
                     .catch(function (error) {
                         // handle error
