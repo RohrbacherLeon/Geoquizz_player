@@ -54,7 +54,7 @@ Vue.component('lmap',{
 
         clearMap(){
             this.layerGroup.clearLayers();
-            this.map.setZoom(13);
+            this.map.flyTo([this.$parent.images[this.$parent.index_img]['lat'], this.$parent.images[this.$parent.index_img]['lng']], this.$parent.map_data.map_zoom);
         }
     }
 })
