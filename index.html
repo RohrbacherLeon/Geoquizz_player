@@ -27,11 +27,11 @@
             <div id="right_panel" class="col-md-4 no_padding">
                 <!-- Right Menu -->
                 <div>
-                    <img v-on:click="enlargedImage = true" class="img-fluid searchedImage" src="place_stan.jpg"/>
-                    
+                    <img v-on:click="enlargedImage = true" class="img-fluid searchedImage" :src="this.images[index_img].url"/>
+
                     <div v-if="enlargedImage" class="modal-container">
                         <div v-on:click="enlargedImage = false" class="modal-body">
-                            <img v-on:click="enlargedImage = true" class="img-fluid enlargedImage" src="place_stan.jpg"/>
+                            <img v-on:click="enlargedImage = true" class="img-fluid enlargedImage" :src="this.images[index_img].url"/>
                         </div>
                     </div>
                 </div>
@@ -39,7 +39,7 @@
                 <div id="infos">
                     <h2>Score : {{score}}</h2>
                     <button v-if="has_played" @click="next_round">Photo suivante !</button>
-                    <p v-if="has_played" class='alert alert-success'>bien joué, la distance est de {{distanceBetween}}km</p>
+                    <p v-if="has_played" class='alert alert-success'>Bien joué, la distance est de {{distanceBetween}}km</p>
                     <button v-if="isSelected" @click="this.$children[0].validate_choice" class="btn btn-primary btn-lg">Valider le choix</button>
                 </div>
             </div>
@@ -47,8 +47,9 @@
 
 
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <!-- <script src="./script/vue.min.js"></script> -->
         <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script> 
-        <script src="https://unpkg.com/axios/dist/axios.min.js%22%3E"></script>
+        <script src="./script/axios.min.js"></script>
         <script src="./components/lmap.js"></script> 
         <script>
         new Vue({
@@ -57,33 +58,40 @@
                 enlargedImage: false,
                 game_id: '',
                 token: '',
-                has_played: false,
-                isSelected: false,
-                distanceBetween: 0,
-                time: 0,
                 images: [
                     {
                         url:"place_stan.jpg", 
                         lat: '48.6935244', 
                         lng:'6.1832861'
+                    },
+                    {
+                        url:"iut_nc.png", 
+                        lat: '48.682988', 
+                        lng:'6.1609476'
                     }
                 ],
                 index_img: 0,
+                //Game
+                has_played: false,
+                isSelected: false,
+                distanceBetween: 0,
                 score: 0,
-                difficulty: 500
+                difficulty: 500,
+                time: 0,
+                //Map
+                map_data:{
+                    map_lat:48.6937223,
+                    map_lng:6.1834097,
+                    map_zoom:13
+                }
             },
 
             methods: { 
                 create_game(){
-
-
-                },
-
-                has_selected(){
-                    this.isSelected = true;
                 },
 
                 submit_choice(latlng){
+                    this.isSelected = false;
                     let distance = this.distance(latlng['lat'],latlng['lng'],this.images[this.index_img]['lat'],this.images[this.index_img]['lng']);
                     if(distance < this.difficulty){
                         this.score += 5;
@@ -96,11 +104,6 @@
                     }
                     this.distanceBetween = (distance / 1000).toFixed(2);
                     this.has_played = true;
-                },
-
-                next_round(){
-                    this.has_played = false;
-                    this.index_img++;
                 },
 
                 distance(lat1, lng1, lat2, lng2){
@@ -122,6 +125,13 @@
                 {
                     var pi = Math.PI;
                     return degrees * (pi/180);
+                },
+
+                next_round(){
+                    this.isSelected = false;
+                    this.has_played = false;
+                    this.index_img++;
+                    this.$children[0].clearMap();
                 },
             },
         });
