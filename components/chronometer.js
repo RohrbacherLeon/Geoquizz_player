@@ -1,9 +1,7 @@
 Vue.component('chronometer',{
     template:`
-        <div class="lmap">
-            <div id="map">
-            </div>
-        </div>
+        <span id="chronotime">0:00:00:00</span>
+        
     `,
 
     data(){
@@ -17,20 +15,20 @@ Vue.component('chronometer',{
     },
 
     mounted(){
-        this.initMap();
-        this.addOnClick();
+        this.chronoStart();
     },
 
     methods:{
 
         chrono(){
-            end = new Date()
-            diff = end - start
-            diff = new Date(diff)
-            var msec = diff.getMilliseconds()
-            var sec = diff.getSeconds()
-            var min = diff.getMinutes()
-            var hr = diff.getHours()-1
+            
+            this.end = new Date()
+            this.diff = this.end - this.start
+            this.diff = new Date(this.diff)
+            let msec = this.diff.getMilliseconds()
+            let sec = this.diff.getSeconds()
+            let min = this.diff.getMinutes()
+            let hr = this.diff.getHours()-1
             if (min < 10){
                 min = "0" + min
             }
@@ -44,36 +42,26 @@ Vue.component('chronometer',{
                 msec = "0" +msec
             }
             document.getElementById("chronotime").innerHTML = hr + ":" + min + ":" + sec + ":" + msec
-            timerID = setTimeout("chrono()", 10)
+            timerID = setTimeout(this.chrono, 100)
         },
         chronoStart(){
-            document.chronoForm.startstop.value = "stop!"
-            document.chronoForm.startstop.onclick = chronoStop
-            document.chronoForm.reset.onclick = chronoReset
-            start = new Date()
-            chrono()
+            this.start = new Date()
+            this.chrono()
         },
         chronoContinue(){
-            document.chronoForm.startstop.value = "stop!"
-            document.chronoForm.startstop.onclick = chronoStop
-            document.chronoForm.reset.onclick = chronoReset
-            start = new Date()-diff
-            start = new Date(start)
-            chrono()
+            this.start = new Date()-this.diff
+            this.start = new Date(this.start)
+            this.chrono()
         },
         chronoReset(){
             document.getElementById("chronotime").innerHTML = "0:00:00:000"
-            start = new Date()
+            this.start = new Date()
         },
         chronoStopReset(){
             document.getElementById("chronotime").innerHTML = "0:00:00:000"
-            document.chronoForm.startstop.onclick = chronoStart
         },
         chronoStop(){
-            document.chronoForm.startstop.value = "start!"
-            document.chronoForm.startstop.onclick = chronoContinue
-            document.chronoForm.reset.onclick = chronoStopReset
-            clearTimeout(timerID)
+            this.clearTimeout(timerID)
         }
 
     }

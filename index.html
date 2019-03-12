@@ -64,6 +64,7 @@
                     </div>
 
                     <div id="infos">
+                        <chronometer></chronometer>
                         <h2>Score : {{score}}</h2>
                         <button v-if="has_played" class="btn btn-secondary btn-lg" @click="next_round">Photo suivante !</button>
                         <p v-if="has_played" class='alert alert-success'>Bien joué, la distance est de {{distanceBetween}}km</p>
@@ -80,6 +81,7 @@
         <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script> 
         <script src="./script/axios.min.js"></script>
         <script src="./components/lmap.js"></script> 
+        <script src="./components/chronometer.js"></script> 
         <script>
         new Vue({
             el: '#app',
@@ -139,7 +141,8 @@
                     
                     if((this.serie !== "") && (this.pseudo !== "")){
                         let urlSend = 'http://bb3a714b.ngrok.io/parties';
-                        this.axiosPost(urlSend, {joueur: this.pseudo});
+                        //this.axiosPost(urlSend, {joueur: this.pseudo});
+                        this.has_started = true;
                     }
                 },
 
