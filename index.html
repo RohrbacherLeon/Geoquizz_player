@@ -5,7 +5,6 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>GeoQuizz</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
         <link rel="stylesheet" type="text/css" href="./style/css/bootstrap-grid.min.css">
         <link rel="stylesheet" type="text/css" href="./style/css/bootstrap-reboot.min.css">
         <link rel="stylesheet" type="text/css" href="./style/css/bootstrap.min.css">
@@ -33,11 +32,12 @@
                                 </select>
                             </div>
                         <div class="form-group col-md-3">
-                            <select id="inputDifficulty" v-model="dificulty" class="form-control">
-                                <option value="1" selected>Facile</option>
-                                <option value="2">Moyen</option>
-                                <option value="3">Dificile</option>
-                            </select>
+                            <select id="inputDifficulty" v-model="difficulty" class="form-control">
+                                <option value="" disabled selected>Difficulté</option>
+                                <option value="750">Facile</option>
+                                <option value="500" >Moyen</option>
+                                <option value="250">Dificile</option>
+                            </select> <p>"Moyen" de base.</p>
                         </div>
                     </div>
                     
@@ -51,24 +51,25 @@
                     </lmap>
                 </div>
 
-            <div id="right_panel" class="col-md-4 no_padding">
-                <!-- Right Menu -->
-                <div>
-                    <img v-on:click="enlargedImage = true" class="img-fluid searchedImage" :src="this.images[index_img].url"/>
+                <div id="right_panel" class="col-md-4 no_padding">
+                    <!-- Right Menu -->
+                    <div>
+                        <img v-on:click="enlargedImage = true" class="img-fluid searchedImage" :src="this.images[index_img].url"/>
 
-                    <div v-if="enlargedImage" class="modal-container">
-                        <div v-on:click="enlargedImage = false" class="modal-body">
-                            <img v-on:click="enlargedImage = true" class="img-fluid enlargedImage" :src="this.images[index_img].url"/>
+                        <div v-if="enlargedImage" class="modal-container">
+                            <div v-on:click="enlargedImage = false" class="modal-body">
+                                <img v-on:click="enlargedImage = true" class="img-fluid enlargedImage" :src="this.images[index_img].url"/>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div id="infos">
-                    <h2>Score : {{score}}</h2>
-                    <button v-if="has_played" class="btn btn-secondary btn-lg" @click="next_round">Photo suivante !</button>
-                    <p v-if="has_played" class='alert alert-success'>Bien joué, la distance est de {{distanceBetween}}km</p>
-                    <p v-if="has_played" class=''>Le lieu était {{this.images[index_img].desc}}</p>
-                    <button v-if="isSelected" @click="this.$children[0].validate_choice" class="btn btn-primary btn-lg">Valider le choix</button>
+                    <div id="infos">
+                        <h2>Score : {{score}}</h2>
+                        <button v-if="has_played" class="btn btn-secondary btn-lg" @click="next_round">Photo suivante !</button>
+                        <p v-if="has_played" class='alert alert-success'>Bien joué, la distance est de {{distanceBetween}}km</p>
+                        <p v-if="has_played" class=''>Le lieu était {{this.images[index_img].desc}}</p>
+                        <button v-if="isSelected" @click="this.$children[0].validate_choice" class="btn btn-primary btn-lg">Valider le choix</button>
+                    </div>
                 </div>
             </div>
         </div>  
@@ -87,7 +88,6 @@
                 create_game_error: '',
                 pseudo: '',
                 serie: '',
-                dificulty: '',
                 
                 enlargedImage: false,
                 game_id: '',
@@ -123,6 +123,9 @@
                 }
             },
 
+            mounted() {
+                document.getElementById('inputDifficulty').selectedIndex = 0; //Second selected
+            },
 
             methods: { 
                 create_game(){
