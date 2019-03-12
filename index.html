@@ -40,6 +40,7 @@
                     <h2>Score : {{score}}</h2>
                     <button v-if="has_played" class="btn btn-secondary btn-lg" @click="next_round">Photo suivante !</button>
                     <p v-if="has_played" class='alert alert-success'>Bien joué, la distance est de {{distanceBetween}}km</p>
+                    <p v-if="has_played" class=''>Le lieu était {{this.images[index_img].desc}}</p>
                     <button v-if="isSelected" @click="this.$children[0].validate_choice" class="btn btn-primary btn-lg">Valider le choix</button>
                 </div>
             </div>
@@ -62,12 +63,14 @@
                     {
                         url:"place_stan.jpg", 
                         lat: '48.6935244', 
-                        lng:'6.1832861'
+                        lng:'6.1832861',
+                        desc:'Place Stanislas'
                     },
                     {
                         url:"iut_nc.png", 
                         lat: '48.682988', 
-                        lng:'6.1609476'
+                        lng:'6.1609476',
+                        desc:'IUT Nancy-Charlemagne'
                     }
                 ],
                 index_img: 0,
@@ -82,7 +85,8 @@
                 map_data:{
                     map_lat:48.6937223,
                     map_lng:6.1834097,
-                    map_zoom:13
+                    map_zoom:13,
+                    map_city:'Nancy'
                 }
             },
 
