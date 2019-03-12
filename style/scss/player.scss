@@ -1,7 +1,14 @@
 @import 'reset';
 @import 'image';
 
-#app{
+#header {
+    form {
+        margin: auto;
+        text-align: center;
+    }
+}
+
+#player{
     display:flex;
 }
 
@@ -28,6 +35,4 @@
 .no_padding
 {
     padding: 0 !important;
-    margin: 0 !important;
-
 }
