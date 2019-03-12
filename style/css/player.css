@@ -60,6 +60,7 @@ table {
   background-color: rgba(0, 0, 0, 0.5);
 }
 .modal-container .modal-body .enlargedImage {
+  user-select: none !important;
   position: fixed;
   top: 50%;
   left: 50%;
@@ -70,6 +71,7 @@ table {
 
 .searchedImage {
   cursor: zoom-in;
+  user-select: none !important;
 }
 
 #header form {
@@ -81,7 +83,13 @@ table {
   display: flex;
 }
 
-#map {
+.lmap {
+  height: 100vh;
+  position: relative;
+  border-right: 1px solid black;
+}
+.lmap #map {
+  user-select: none !important;
   height: 100vh;
 }
 
