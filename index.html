@@ -187,6 +187,17 @@
                     this.$children[0].clearMap();
                 },
 
+                axiosGet(urlSend){
+                    axios.get(urlSend).then(function (response) {
+                        // handle success
+                        console.log(response);
+                    })
+                    .catch(function (error) {
+                        // handle error
+                        console.log(error);
+                    })
+                },
+
                 axiosPost(urlSend, params){
                     axios.post(urlSend,params).then(function (response) {
                         // handle success
