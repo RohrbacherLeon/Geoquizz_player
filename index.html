@@ -35,10 +35,12 @@
                         </div>
                     </div>
                 </div>
+
                 <div id="infos">
                     <h2>Score : {{score}}</h2>
                     <button v-if="has_played" @click="next_round">Photo suivante !</button>
-                    <p v-if="has_played" class='alert alert-success'>bien joué</p>
+                    <p v-if="has_played" class='alert alert-success'>bien joué, la distance est de {{distanceBetween}}km</p>
+                    <button v-if="isSelected" @click="this.$children[0].validate_choice" class="btn btn-primary btn-lg">Valider le choix</button>
                 </div>
             </div>
         </div>
@@ -55,6 +57,8 @@
                 game_id: '',
                 token: '',
                 has_played: false,
+                isSelected: false,
+                distanceBetween: 0,
                 images: [
                     {
                         url:"place_stan.jpg", 
@@ -73,6 +77,10 @@
 
                 },
 
+                has_selected(){
+                    this.isSelected = true;
+                },
+
                 submit_choice(latlng){
                     let distance = this.distance(latlng['lat'],latlng['lng'],this.images[this.index_img]['lat'],this.images[this.index_img]['lng']);
                     if(distance < this.difficulty){
@@ -84,6 +92,7 @@
                     else if(distance < 3*this.difficulty){
                         this.score += 1;
                     }
+                    this.distanceBetween = (distance / 1000).toFixed(2);
                     this.has_played = true;
                 },
 

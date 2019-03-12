@@ -3,7 +3,6 @@ Vue.component('lmap',{
     template:`
         <div class="lmap">
             <div id="map">
-
             </div>
         </div>
     `,
@@ -22,7 +21,6 @@ Vue.component('lmap',{
         this.initLayers();
         
         this.map.on('click', (e) => {
-            console.log(e.latlng);
 
             if(this.selectedMarker != undefined){
                 this.map.removeLayer(this.selectedMarker);
@@ -30,7 +28,7 @@ Vue.component('lmap',{
             }
 
             this.selectedMarker = L.marker(e.latlng).addTo(this.map);
-            this.$parent.submit_choice(e.latlng)
+            this.$parent.has_selected();
         });
     },
 
@@ -48,7 +46,22 @@ Vue.component('lmap',{
         },
 
         initLayers(){
-            //Get pictures and points !
+            //Get pictures and points ! Temp point
+
+        },
+
+        validate_choice(){
+            let searchedMarker = L.marker([this.$parent.images[this.$parent.index_img]['lat'], this.$parent.images[this.$parent.index_img]['lng']]).addTo(this.map);
+            
+            let coord = Array();
+
+            coord.push(searchedMarker.getLatLng());
+            coord.push(this.selectedMarker.getLatLng());
+            
+            let pathLine = L.polyline(coord, {color:'red'}).addTo(this.map);
+            this.map.fitBounds(pathLine.getBounds());
+
+            this.$parent.submit_choice(this.selectedMarker.getLatLng());
         }
     }
 })
