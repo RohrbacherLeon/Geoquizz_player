@@ -17,15 +17,7 @@ Vue.component('lmap',{
 
     mounted(){
         this.initMap();
-        this.map.on('click', (e) => {
-            if(this.selectedMarker != undefined){
-                this.layerGroup.removeLayer(this.selectedMarker);
-                this.selectedMarker = null;
-            }
-            this.selectedMarker = L.marker(e.latlng);
-            this.layerGroup.addLayer(this.selectedMarker);
-            this.$parent.isSelected=true;
-        });
+        this.addOnClick();
     },
 
     methods:{
@@ -43,6 +35,7 @@ Vue.component('lmap',{
         },
 
         validate_choice(){
+            this.map.off('click');
             let searchedMarker = L.marker([this.$parent.images[this.$parent.index_img]['lat'], this.$parent.images[this.$parent.index_img]['lng']]).addTo(this.layerGroup);
             let coord = Array();
             coord.push(searchedMarker.getLatLng());
@@ -55,6 +48,19 @@ Vue.component('lmap',{
         clearMap(){
             this.layerGroup.clearLayers();
             this.map.flyTo([this.$parent.images[this.$parent.index_img]['lat'], this.$parent.images[this.$parent.index_img]['lng']], this.$parent.map_data.map_zoom);
+            this.addOnClick();
+        },
+
+        addOnClick(){
+            this.map.on('click', (e) => {
+                if(this.selectedMarker != undefined){
+                    this.layerGroup.removeLayer(this.selectedMarker);
+                    this.selectedMarker = null;
+                }
+                this.selectedMarker = L.marker(e.latlng);
+                this.layerGroup.addLayer(this.selectedMarker);
+                this.$parent.isSelected=true;
+            });
         }
     }
 })
