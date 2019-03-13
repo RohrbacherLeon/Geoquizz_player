@@ -151,11 +151,12 @@
                         document.getElementById("inputSerie").classList.add("is-invalid");
                     
                     if((this.serie !== "") && (this.pseudo !== "")){
-                        let urlSend = "http://bb3a714b.ngrok.io/parties";
+                        let url = "http://a2fd496c.ngrok.io/";
+                        let urlSend = url + "parties";
                         let partie;
                         axios.post(urlSend,{joueur: this.pseudo, serie: {id:1 }}).then( (response) => {
                             partie = response.data;
-                            axios.get("http://bb3a714b.ngrok.io/series/"+serie.id+'/photos').then((response) => {
+                            axios.get(url + "series/" + serie.id + '/photos').then((response) => {
                                 // handle success
                                 this.images = response.data;
                                 console.log("Images : " + this.images )
