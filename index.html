@@ -17,13 +17,17 @@
 
     <body>
         <div id="app">
-            <div v-if="!has_started" id="header">
-                <div class="col-md-10 no_padding">
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
+            <div v-if="!has_started" id="center" class="d-flex justify-content-center align-items-center">
+                <div id="new-form" class="col-md-9 no_padding">
+                    <div class="note">
+                        <p class="h2">Commencer une nouvelle partie</p>
+                        <p class="h4">Embarquer pour une expérience qui vous fera découvrir le monde.</p>
+                    </div>
+                    <div class="form-row no_padding no_margin">
+                        <div class="form-group col-md-5">
                             <input type="text" class="form-control" v-model="pseudo" placeholder="Pseudo" id="inputPseudo">
                         </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                                 <select id="inputSerie" v-model="serie" class="form-control">
                                     <option value="" disabled selected>Série</option>
                                     <option value="1">Nancy</option>
@@ -31,17 +35,17 @@
                                     <option value="3">Monde</option>
                                 </select>
                             </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-2">
                             <select id="inputDifficulty" v-model="difficulty" class="form-control">
                                 <option value="" disabled selected>Difficulté</option>
                                 <option value="750">Facile</option>
                                 <option value="500" >Moyen</option>
                                 <option value="250">Dificile</option>
-                            </select> <p>"Moyen" de base.</p>
+                            </select> <p>Difficulté "Moyenne" par défaut</p>
                         </div>
                     </div>
                     
-                    <button type="submit" v-on:click="create_game" class="btn btn-primary">New Game</button>
+                    <button type="submit" v-on:click="create_game" class="btn btn-primary">Nouvelle partie</button>
                 </div>
             </div>
             <div id="player" v-if="has_started">
@@ -86,11 +90,6 @@
         new Vue({
             el: '#app',
             data: { 
-                has_started: false,
-                create_game_error: '',
-                pseudo: '',
-                serie: '',
-                
                 enlargedImage: false,
                 game_id: '',
                 token: '',
@@ -110,6 +109,10 @@
                 ],
                 index_img: 0,
                 //Game
+                pseudo: '',
+                serie: '',
+                create_game_error: '',
+                has_started: false,
                 has_played: false,
                 isSelected: false,
                 distanceBetween: 0,
@@ -187,7 +190,7 @@
                 },
 
                 distance(lat1, lng1, lat2, lng2){
-                    let earth_radius = 6378137;   // Terre = sphère de 6378km de rayon
+                    let earth_radius = 6378137;   // Earth = radius 6378km
                     let rlo1 = this.deg2rad(lng1);
                     let rla1 = this.deg2rad(lat1);
                     let rlo2 = this.deg2rad(lng2);

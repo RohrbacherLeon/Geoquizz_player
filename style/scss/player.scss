@@ -1,10 +1,55 @@
 @import 'reset';
 @import 'image';
 
-#header {
-    form {
-        margin: auto;
-        text-align: center;
+#app{
+    height: 100vh;
+    width: 100vw;
+
+    #center {
+        height: 100%;
+
+        #new-form{
+            border: 1px solid #ced4da !important;
+
+            button{
+                border:none;
+                margin: 25px;
+                width: 200px;
+                font-size: 1.5em;
+            }
+
+            .form-group{
+                margin-top: 25px !important;
+                margin-left: 2% !important;
+                margin-bottom: 10px !important;
+
+                p{
+                    margin-top: 10px !important;
+                }
+
+                input, select{
+                    font-size: 1.2em;
+                }
+            }
+
+            .note{
+                text-align: center;
+                height: 80px;
+                background: linear-gradient(to left, #0072ff, #8811c5);
+                color: #fff;
+                font-weight: bold;
+
+                h5{
+                    font-size: 75%;
+                    font-weight: normal;
+                }
+            }
+    
+            form {
+                margin: auto;
+                text-align: center;
+            }
+        }
     }
 }
 
@@ -23,7 +68,6 @@
     }
 }
 
-
 #right_panel {
     display: flex;
     flex-direction: column;
@@ -40,7 +84,10 @@
     }
 }
 
-.no_padding
-{
+.no_padding{
     padding: 0 !important;
+}
+
+.no_margin{
+    margin: 0 !important;
 }
