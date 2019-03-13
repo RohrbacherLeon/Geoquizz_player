@@ -213,9 +213,8 @@
                     this.isSelected = false;
                     this.has_played = false;
                     this.index_img++;
-                    this.$children[0].clearMap();
                     this.$children[1].chronoReset();
-                    this.$children[1].chronoStart();
+                    this.$children[0].clearMap();
                     document.getElementById('chronotime').className = "text-danger"; //Change timer color to red
                 },
 

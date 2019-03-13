@@ -47,7 +47,10 @@ Vue.component('lmap',{
 
         clearMap(){
             this.layerGroup.clearLayers();
-            this.map.flyTo([this.$parent.images[this.$parent.index_img]['lat'], this.$parent.images[this.$parent.index_img]['lng']], this.$parent.map_data.map_zoom);
+            this.map.flyTo([this.$parent.map_data['map_lat'], this.$parent.map_data['map_lng']], this.$parent.map_data.map_zoom);
+            this.map.once('moveend', () => {
+                this.$parent.$children[1].chronoStart();
+            });
             this.addOnClick();
         },
 
