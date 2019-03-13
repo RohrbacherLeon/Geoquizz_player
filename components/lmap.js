@@ -36,7 +36,7 @@ Vue.component('lmap',{
 
         validate_choice(){
             this.map.off('click');
-            let searchedMarker = L.marker([this.$parent.images[this.$parent.index_img]['lat'], this.$parent.images[this.$parent.index_img]['lng']]).addTo(this.layerGroup);
+            let searchedMarker = L.marker([this.$parent.images[this.$parent.index_img]['latitude'], this.$parent.images[this.$parent.index_img]['longitude']]).addTo(this.layerGroup);
             let coord = Array();
             coord.push(searchedMarker.getLatLng());
             coord.push(this.selectedMarker.getLatLng());
@@ -47,7 +47,10 @@ Vue.component('lmap',{
 
         clearMap(){
             this.layerGroup.clearLayers();
-            this.map.flyTo([this.$parent.images[this.$parent.index_img]['lat'], this.$parent.images[this.$parent.index_img]['lng']], this.$parent.map_data.map_zoom);
+            this.map.flyTo([this.$parent.map_data['map_lat'], this.$parent.map_data['map_lng']], this.$parent.map_data.map_zoom);
+            this.map.once('moveend', () => {
+                this.$parent.$children[1].chronoStart();
+            });
             this.addOnClick();
         },
 
