@@ -20,6 +20,11 @@
         <div id="app">
             <div v-if="!has_started" id="center" class="d-flex justify-content-center align-items-center">
                 <div id="new-form" class="col-md-9 no_padding">
+                    <div v-if="is_loading">
+                        <div class="pin"></div>
+                        <div class="pulse"></div>
+                    </div>
+                    <img src="logo.png" class="logo img-fluid mx-auto d-block">
                     <div class="note">
                         <p class="h2">Commencer une nouvelle partie</p>
                         <p class="h4">Embarquer pour une expérience qui vous fera découvrir le monde.</p>
@@ -113,6 +118,7 @@
                 pseudo: '',
                 serie: '',
                 create_game_error: '',
+                is_loading: false,
                 has_started: false,
                 has_played: false,
                 isSelected: false,
