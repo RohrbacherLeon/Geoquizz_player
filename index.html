@@ -29,11 +29,9 @@
                             <input type="text" class="form-control" v-model="pseudo" placeholder="Pseudo" id="inputPseudo">
                         </div>
                         <div class="form-group col-md-4">
-                                <select id="inputSerie" v-model="serie" class="form-control">
+                                <select id="inputSerie" v-model="actualSerie" class="form-control">
                                     <option value="" disabled selected>Série</option>
-                                    <option value="1">Nancy</option>
-                                    <option value="2">France</option>
-                                    <option value="3">Monde</option>
+                                    <option v-for="opt in allSeries" v-bind:value="opt">{{opt.ville}}</option>
                                 </select>
                             </div>
                         <div class="form-group col-md-2">
@@ -46,7 +44,7 @@
                         </div>
                     </div>
                     
-                    <button type="submit" v-on:click="create_game" class="btn btn-primary">Nouvelle partie</button>
+                    <button id="btn_newGame" type="submit" v-on:click="create_game" class="btn btn-primary">Nouvelle partie</button>
                 </div>
             </div>
             <div id="player" v-if="has_started">
@@ -73,7 +71,7 @@
                         <h2>Score : {{score}}</h2>
                         <button v-if="has_played" class="btn btn-secondary btn-lg" @click="next_round">Photo suivante !</button>
                         <p v-if="has_played" class='alert alert-success'>Bien joué, la distance est de {{distanceBetween}}km, trouvé en {{time.min}} minutes, {{time.sec}} secondes et {{time.msec}} ms.</p>
-                        <p v-if="has_played" class=''>Le lieu était {{this.images[index_img].desc}}</p>
+                        <p v-if="has_played" class=''>Le lieu était {{this.images[this.index_img].description}}</p>
                         <button v-if="isSelected" @click="validate_choice" class="btn btn-primary btn-lg">Valider le choix</button>
                     </div>
                 </div>
@@ -84,10 +82,12 @@
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
         <!-- <script src="./script/vue.min.js"></script> -->
         <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script> 
+        <!-- <script src="https://unpkg.com/axios/dist/axios.js"></script> -->
         <script src="./script/axios.min.js"></script>
         <script src="./components/lmap.js"></script> 
         <script src="./components/chronometer.js"></script> 
         <script>
+        const url = "http://a2fd496c.ngrok.io/";
         new Vue({
             el: '#app',
             data: { 
@@ -95,23 +95,12 @@
                 game_id: '',
                 token: '',
                 images: [
-                    {
-                        url:"place_stan.jpg", 
-                        lat: '48.6935244', 
-                        lng:'6.1832861',
-                        desc:'Place Stanislas'
-                    },
-                    {
-                        url:"iut_nc.png", 
-                        lat: '48.682988', 
-                        lng:'6.1609476',
-                        desc:'IUT Nancy-Charlemagne'
-                    }
                 ],
                 index_img: 0,
                 //Game
                 pseudo: '',
-                serie: '',
+                allSeries : {}, //All existing series from the API
+                actualSerie: '', //Serie choosen by the user
                 create_game_error: '',
                 has_started: false,
                 has_played: false,
@@ -135,45 +124,51 @@
             },
 
             mounted() {
-                document.getElementById('inputDifficulty').selectedIndex = 0; //Second selected
+                this.getSeries();
+                document.getElementById('inputDifficulty').selectedIndex = 0; //Second selected, NE FONCTIONNE PLUS ?
             },
 
             methods: { 
+                /* Method used to initialize the game */
                 create_game(){
                     if(this.pseudo !== "")
                         document.getElementById("inputPseudo").classList.remove("is-invalid");
                     else
                         document.getElementById("inputPseudo").classList.add("is-invalid");
                     
-                    if(this.serie !== "")
+                    if(this.actualSerie !== "")
                         document.getElementById("inputSerie").classList.remove("is-invalid");
                     else
                         document.getElementById("inputSerie").classList.add("is-invalid");
                     
-                    if((this.serie !== "") && (this.pseudo !== "")){
-                        let url = "http://a2fd496c.ngrok.io/";
-                        let urlSend = url + "parties";
-                        let partie;
-                        axios.post(urlSend,{joueur: this.pseudo, serie: {id:1 }}).then( (response) => {
-                            partie = response.data;
-                            axios.get(url + "series/" + serie.id + '/photos').then((response) => {
-                                // handle success
-                                this.images = response.data;
-                                console.log("Images : " + this.images )
+                    if((this.actualSerie !== "") && (this.pseudo !== "")){
+                        document.getElementById("btn_newGame").disabled = true; //Disable button, prevent multiple click
+                        //Get 10 photos of the actualSerie
+                        axios.get(this.actualSerie._links.self.href + "/photos?limit=9&random=true").then((responsePhotos) => {
+                            this.images = responsePhotos.data;
+                            //Create the game
+                            //TEMP
+                            this.images.forEach(element => {
+                                element.serie = this.actualSerie;
+                            });
+                            //TEMP
+                            let options = {joueur: this.pseudo, nb_photos: 10, photos: this.images, serie: this.actualSerie};
+                            axios.post(url + "parties", options).then((responseToken) => {
+                                console.log(responseToken);
                                 this.has_started = true;
-                            })
-                            .catch(function (error) {
-                                // handle error
+                            }).catch(function (error) {
                                 console.log(error);
-                            })
-                        })
-                        .catch(function (error) {
-                            // handle error
+                                document.getElementById("btn_newGame").disabled = false; //Enable button if error
+                            });
+                        }).catch(function (error) {
                             console.log(error);
-                        })
+                            document.getElementById("btn_newGame").disabled = false; //Enable button if error
+                        });
                     }
                 },
 
+                /* Method used to get the choice (marker)
+                @Param latlng Lat and lng of the point */
                 submit_choice(latlng){
                     this.isSelected = false;
                     let distance = this.distance(latlng['lat'],latlng['lng'],this.images[this.index_img]['latitude'],this.images[this.index_img]['longitude']);
@@ -190,6 +185,7 @@
                     this.has_played = true;
                 },
 
+                /* Method used to get the distance (in metter) of 2 points (lat, lng) */
                 distance(lat1, lng1, lat2, lng2){
                     let earth_radius = 6378137;   // Earth = radius 6378km
                     let rlo1 = this.deg2rad(lng1);
@@ -205,12 +201,14 @@
                     return meter;
                 },
 
+                /* Method used to convert degrees to radiant */
                 deg2rad(degrees)
                 {
                     var pi = Math.PI;
                     return degrees * (pi/180);
                 },
 
+                /* Method used to go to the next photo */
                 next_round(){
                     this.isSelected = false;
                     this.has_played = false;
@@ -221,6 +219,7 @@
                     document.getElementById('chronotime').className = "text-danger"; //Change timer color to red
                 },
 
+                /* Methode used to validate the choice of the user (marker) */
                 validate_choice(){
                     this.$children[0].validate_choice();
                     this.$children[1].chronoStop();
@@ -232,26 +231,13 @@
                     document.getElementById('chronotime').className = "text-success"; //Change timer color to green
                 },
 
-                axiosGet(urlSend, params){
-                    axios.get(urlSend, params).then(function (response) {
-                        // handle success
-                        return response;
-                    })
-                    .catch(function (error) {
-                        // handle error
+                /* Methode used to get all the existing series from the API */
+                getSeries(){
+                    axios.get(url + "series/").then((response) => {
+                        this.allSeries = response.data._embedded.series;
+                    }).catch(function (error) {
                         console.log(error);
-                    })
-                },
-
-                axiosPost(urlSend, params){
-                    axios.post(urlSend,params).then(function (response) {
-                        // handle success
-                        return response;
-                    })
-                    .catch(function (error) {
-                        // handle error
-                        console.log(error);
-                    })
+                    });
                 }
             },
         });

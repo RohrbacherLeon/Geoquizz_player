@@ -36,7 +36,7 @@ Vue.component('lmap',{
 
         validate_choice(){
             this.map.off('click');
-            let searchedMarker = L.marker([this.$parent.images[this.$parent.index_img]['lat'], this.$parent.images[this.$parent.index_img]['lng']]).addTo(this.layerGroup);
+            let searchedMarker = L.marker([this.$parent.images[this.$parent.index_img]['latitude'], this.$parent.images[this.$parent.index_img]['longitude']]).addTo(this.layerGroup);
             let coord = Array();
             coord.push(searchedMarker.getLatLng());
             coord.push(this.selectedMarker.getLatLng());
