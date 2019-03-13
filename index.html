@@ -10,6 +10,7 @@
         <link rel="stylesheet" type="text/css" href="./style/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" />
         <link rel="stylesheet" type="text/css" href="./style/css/player.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
         <script src="./script/jquery.min.js"></script> 
         <script src="./script/bootstrap.bundle.min.js"></script> 
         <script src="./script/bootstrap.min.js"></script> 
@@ -150,16 +151,15 @@
                         document.getElementById("inputSerie").classList.add("is-invalid");
                     
                     if((this.serie !== "") && (this.pseudo !== "")){
-                        let urlSend = 'http://bb3a714b.ngrok.io/parties';
+                        let urlSend = "http://bb3a714b.ngrok.io/parties";
                         let partie;
                         axios.post(urlSend,{joueur: this.pseudo, serie: {id:1 }}).then( (response) => {
                             partie = response.data;
-                            axios.get("http://bb3a714b.ngrok.io/series/"+"1"+'/photos').then((response) => {
+                            axios.get("http://bb3a714b.ngrok.io/series/"+serie.id+'/photos').then((response) => {
                                 // handle success
                                 this.images = response.data;
-                                console.log(this.has_started )
+                                console.log("Images : " + this.images )
                                 this.has_started = true;
-                                console.log(this.has_started )
                             })
                             .catch(function (error) {
                                 // handle error
