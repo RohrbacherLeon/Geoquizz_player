@@ -35,7 +35,6 @@
             <div v-if="!has_started && !is_loading" id="center" class="d-flex justify-content-center align-items-center">
                 <div id="new-form" class="col-md-9 no_padding">
                     <img src="logo.png" class="logo img-fluid mx-auto d-block">
-                    
                     <div class="form-row no_padding no_margin">
                         <div class="note">
                             <p class="h2">Commencer une nouvelle partie</p>
@@ -92,10 +91,10 @@
                         <h2>Score : {{score}}</h2>
                         <button v-if="has_played" class="btn btn-secondary btn-lg" @click="next_round">Photo suivante !</button>
 
-                        <p v-if="has_played && score_increment === 5" class='alert alert-success'>Bien joué, la distance est de {{distanceBetween}}km, trouvé en {{time.min}} minutes, {{time.sec}} secondes et {{time.msec}} ms. + 5 points !</p>
-                        <p v-if="has_played && score_increment === 3" class='alert alert-warning'>Presque, la distance est de {{distanceBetween}}km, trouvé en {{time.min}} minutes, {{time.sec}} secondes et {{time.msec}} ms. + 3 points !</p>
-                        <p v-if="has_played && score_increment === 1" class='alert alert-danger'>Pas fou, la distance est de {{distanceBetween}}km, trouvé en {{time.min}} minutes, {{time.sec}} secondes et {{time.msec}} ms. + 1 points !</p>
-                        <p v-if="has_played && score_increment === 0" class='alert alert-secondary'>Raté, la distance est de {{distanceBetween}}km, trouvé en {{time.min}} minutes, {{time.sec}} secondes et {{time.msec}} ms. Vous ne gagnez aucun point.</p>
+                        <p v-if="has_played && score_increment === 5" class='alert alert-success'>Bien joué, la distance est de {{distanceBetween}}km, trouvé en {{time.min}} minutes, {{time.sec}} secondes et {{time.msec}} ms. <strong>+ 5 points !</strong></p>
+                        <p v-if="has_played && score_increment === 3" class='alert alert-warning'>Presque, la distance est de {{distanceBetween}}km, trouvé en {{time.min}} minutes, {{time.sec}} secondes et {{time.msec}} ms. <strong>+ 3 points !</strong></p>
+                        <p v-if="has_played && score_increment === 1" class='alert alert-danger'>Pas fou, la distance est de {{distanceBetween}}km, trouvé en {{time.min}} minutes, {{time.sec}} secondes et {{time.msec}} ms. <strong>+ 1 point !</strong></p>
+                        <p v-if="has_played && score_increment === 0" class='alert alert-secondary'>Raté, la distance est de {{distanceBetween}}km, trouvé en {{time.min}} minutes, {{time.sec}} secondes et {{time.msec}} ms. <strong>Vous ne gagnez aucun point.</strong></p>
 
                         <p v-if="has_played" class=''>Le lieu était {{this.images[this.index_img].description}}</p>
                         <button v-if="isSelected" @click="validate_choice" class="btn btn-primary btn-lg">Valider le choix</button>
@@ -116,7 +115,7 @@
         <script src="./components/lmap.js"></script> 
         <script src="./components/chronometer.js"></script> 
         <script>
-        const url = "http://93bd071e.ngrok.io/";
+        const url = "http://ff2e0097.ngrok.io/";
         new Vue({
             el: '#app',
             data: { 
@@ -133,6 +132,7 @@
                 is_loading: false,
                 game_error: false,
                 has_started: false,
+                end_game: false,
                 has_played: false,
                 isSelected: false,
                 distanceBetween: 0,
@@ -179,23 +179,20 @@
                         this.map_data.map_city = this.actualSerie.ville;
                         document.getElementById("btn_newGame").disabled = true; //Disable button, prevent multiple click
                         this.is_loading = true;
-                        //Get 10 photos of the actualSerie
-                        axios.get(this.actualSerie._links.self.href + "/photos?limit=9&random=true").then((responsePhotos) => {
-                            this.images = responsePhotos.data;
-                            //Create the game
-                            //TEMP
+                        //Create the game
+
+                        let options = {joueur: this.pseudo, serie: this.actualSerie};
+                        axios.post(url + "parties?limit=10", options).then((responsePartie) => {
+                            this.images = responsePartie.data.photos;
+                            //Adding image url
+                            console.log(this.images);
                             this.images.forEach(element => {
-                                element.serie = this.actualSerie;
+                                element.url = url + "photos/" + element.url;
                             });
-                            //TEMP
-                            let options = {joueur: this.pseudo, nb_photos: 10, photos: this.images, serie: this.actualSerie};
-                            axios.post(url + "parties", options).then((responseToken) => {
-                                this.has_started = true;
-                            }).catch((error) => {
-                                this.game_error = true;
-                                document.getElementById("btn_newGame").disabled = false; //Enable button if error
-                            });
+                            this.has_started = true;
+                            this.is_loading = false;
                         }).catch((error) => {
+                            this.is_loading = false;
                             this.game_error = true;
                             document.getElementById("btn_newGame").disabled = false; //Enable button if error
                         });
@@ -254,6 +251,7 @@
                     //Test if end of game
                     if(this.index_img+1 === this.images.length){
                         //End
+                        this.end_game = true;
                     }else{
                         this.isSelected = false;
                         this.has_played = false;
@@ -279,10 +277,12 @@
 
                 /* Methode used to get all the existing series from the API */
                 getSeries(){
+                    this.is_loading = true;
                     axios.get(url + "series/").then((response) => {
                         this.allSeries = response.data._embedded.series;
-                        console.log(allSeries);
+                        this.is_loading = false;
                     }).catch((error) => {
+                        this.is_loading = false;
                         this.game_error = true;
                     });
                 }
