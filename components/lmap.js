@@ -50,8 +50,8 @@ Vue.component('lmap',{
             this.map.flyTo([this.$parent.map_data['map_lat'], this.$parent.map_data['map_lng']], this.$parent.map_data.map_zoom);
             this.map.once('moveend', () => {
                 this.$parent.$children[1].chronoStart();
+                this.addOnClick();
             });
-            this.addOnClick();
         },
 
         addOnClick(){
