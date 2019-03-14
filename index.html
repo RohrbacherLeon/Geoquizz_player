@@ -106,7 +106,7 @@
         <script src="./components/lmap.js"></script> 
         <script src="./components/chronometer.js"></script> 
         <script>
-        const url = "http://93bd071e.ngrok.io/";
+        const url = "http://ff2e0097.ngrok.io/";
         new Vue({
             el: '#app',
             data: { 
@@ -170,25 +170,15 @@
                         this.map_data.map_city = this.actualSerie.ville;
                         document.getElementById("btn_newGame").disabled = true; //Disable button, prevent multiple click
                         this.is_loading = true;
-                        //Get 10 photos of the actualSerie
-                        axios.get(this.actualSerie._links.self.href + "/photos?limit=9&random=true").then((responsePhotos) => {
-                            this.images = responsePhotos.data;
-                            //Create the game
-                            //TEMP
-                            console.log(this.images);
-                            this.images.forEach(element => {
-                                element.serie = this.actualSerie;
-                                // element.url = url + 'photos/' + element.url;
-                            });
-                            //TEMP
-                            let options = {joueur: this.pseudo, nb_photos: 10, photos: this.images, serie: this.actualSerie};
-                            axios.post(url + "parties", options).then((responseToken) => {
-                                this.has_started = true;
-                            }).catch((error) => {
-                                this.game_error = true;
-                                document.getElementById("btn_newGame").disabled = false; //Enable button if error
-                            });
+                        //Create the game
+
+                        let options = {joueur: this.pseudo, serie: this.actualSerie};
+                        axios.post(url + "parties?limit=10", options).then((responsePartie) => {
+                            this.images = responsePartie.data.photos;
+                            this.has_started = true;
+                            this.is_loading = false;
                         }).catch((error) => {
+                            this.is_loading = false;
                             this.game_error = true;
                             document.getElementById("btn_newGame").disabled = false; //Enable button if error
                         });
@@ -275,7 +265,6 @@
                 getSeries(){
                     axios.get(url + "series/").then((response) => {
                         this.allSeries = response.data._embedded.series;
-                        console.log(allSeries);
                     }).catch((error) => {
                         this.game_error = true;
                     });
