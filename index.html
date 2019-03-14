@@ -175,6 +175,11 @@
                         let options = {joueur: this.pseudo, serie: this.actualSerie};
                         axios.post(url + "parties?limit=10", options).then((responsePartie) => {
                             this.images = responsePartie.data.photos;
+                            //Adding image url
+                            console.log(this.images);
+                            this.images.forEach(element => {
+                                element.url = url + "photos/" + element.url;
+                            });
                             this.has_started = true;
                             this.is_loading = false;
                         }).catch((error) => {
@@ -263,9 +268,12 @@
 
                 /* Methode used to get all the existing series from the API */
                 getSeries(){
+                    this.is_loading = true;
                     axios.get(url + "series/").then((response) => {
                         this.allSeries = response.data._embedded.series;
+                        this.is_loading = false;
                     }).catch((error) => {
+                        this.is_loading = false;
                         this.game_error = true;
                     });
                 }
