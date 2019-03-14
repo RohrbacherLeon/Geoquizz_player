@@ -53,7 +53,7 @@
                     
                     <button id="btn_newGame" type="submit" v-on:click="create_game" class="btn btn-primary">Nouvelle partie</button>
                     
-                    <div v-if="game_error" class="alert alert-danger" role="alert">
+                    <div v-if="game_error" class="alert alert-danger text-center" role="alert">
                         Ohoh ! Il y'a eu un problème, veuillez-réessayer ultérieurement.
                     </div>
                 </div>
@@ -90,7 +90,7 @@
 
                         <p v-if="has_played" class=''>Le lieu était {{this.images[this.index_img].description}}</p>
                         <button v-if="isSelected" @click="validate_choice" class="btn btn-primary btn-lg">Valider le choix</button>
-                        <div v-if="game_error" class="alert alert-danger" role="alert">
+                        <div v-if="game_error" class="alert alert-danger text-center" role="alert">
                             Ohoh ! Il y'a eu un problème, veuillez-réessayer ultérieurement.
                         </div>
                     </div>
@@ -146,7 +146,7 @@
             },
 
             mounted() {
-                //this.getSeries();
+                this.getSeries();
                 document.getElementById('inputDifficulty').selectedIndex = 0; //Second selected, NE FONCTIONNE PLUS ?
             },
 
@@ -272,6 +272,7 @@
                 getSeries(){
                     axios.get(url + "series/").then((response) => {
                         this.allSeries = response.data._embedded.series;
+                        console.log(allSeries);
                     }).catch((error) => {
                         this.game_error = true;
                     });
