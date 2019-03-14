@@ -52,6 +52,10 @@
                     </div>
                     
                     <button id="btn_newGame" type="submit" v-on:click="create_game" class="btn btn-primary">Nouvelle partie</button>
+                    
+                    <div v-if="game_error" class="alert alert-danger" role="alert">
+                        Ohoh ! Il y'a eu un problème, veuillez-réessayer ultérieurement.
+                    </div>
                 </div>
             </div>
             </transition>
@@ -78,9 +82,17 @@
                         <chronometer></chronometer>
                         <h2>Score : {{score}}</h2>
                         <button v-if="has_played" class="btn btn-secondary btn-lg" @click="next_round">Photo suivante !</button>
-                        <p v-if="has_played" class='alert alert-success'>Bien joué, la distance est de {{distanceBetween}}km, trouvé en {{time.min}} minutes, {{time.sec}} secondes et {{time.msec}} ms.</p>
+
+                        <p v-if="has_played && score_increment === 5" class='alert alert-success'>Bien joué, la distance est de {{distanceBetween}}km, trouvé en {{time.min}} minutes, {{time.sec}} secondes et {{time.msec}} ms. + 5 points !</p>
+                        <p v-if="has_played && score_increment === 3" class='alert alert-warning'>Presque, la distance est de {{distanceBetween}}km, trouvé en {{time.min}} minutes, {{time.sec}} secondes et {{time.msec}} ms. + 3 points !</p>
+                        <p v-if="has_played && score_increment === 1" class='alert alert-danger'>Pas fou, la distance est de {{distanceBetween}}km, trouvé en {{time.min}} minutes, {{time.sec}} secondes et {{time.msec}} ms. + 1 points !</p>
+                        <p v-if="has_played && score_increment === 0" class='alert alert-secondary'>Raté, la distance est de {{distanceBetween}}km, trouvé en {{time.min}} minutes, {{time.sec}} secondes et {{time.msec}} ms. Vous ne gagnez aucun point.</p>
+
                         <p v-if="has_played" class=''>Le lieu était {{this.images[this.index_img].description}}</p>
                         <button v-if="isSelected" @click="validate_choice" class="btn btn-primary btn-lg">Valider le choix</button>
+                        <div v-if="game_error" class="alert alert-danger" role="alert">
+                            Ohoh ! Il y'a eu un problème, veuillez-réessayer ultérieurement.
+                        </div>
                     </div>
                 </div>
             </div>
@@ -95,7 +107,7 @@
         <script src="./components/lmap.js"></script> 
         <script src="./components/chronometer.js"></script> 
         <script>
-        const url = "http://a2fd496c.ngrok.io/";
+        const url = "http://93bd071e.ngrok.io/";
         new Vue({
             el: '#app',
             data: { 
@@ -109,13 +121,14 @@
                 pseudo: '',
                 allSeries : {}, //All existing series from the API
                 actualSerie: '', //Serie choosen by the user
-                create_game_error: '',
                 is_loading: false,
+                game_error: false,
                 has_started: false,
                 has_played: false,
                 isSelected: false,
                 distanceBetween: 0,
                 score: 0,
+                score_increment: 0,
                 difficulty: 500,
                 time: {
                     sec:0,
@@ -150,7 +163,11 @@
                     else
                         document.getElementById("inputSerie").classList.add("is-invalid");
                     
-                    if((this.actualSerie !== "e") && (this.pseudo !== "")){
+                    if((this.actualSerie !== "") && (this.pseudo !== "")){
+                        //Instanciate map
+                        this.map_data.map_lat = this.actualSerie.map_lat;
+                        this.map_data.map_lng = this.actualSerie.map_long;
+                        this.map_data.map_city = this.actualSerie.ville;
                         document.getElementById("btn_newGame").disabled = true; //Disable button, prevent multiple click
                         this.is_loading = true;
                         //Get 10 photos of the actualSerie
@@ -164,14 +181,13 @@
                             //TEMP
                             let options = {joueur: this.pseudo, nb_photos: 10, photos: this.images, serie: this.actualSerie};
                             axios.post(url + "parties", options).then((responseToken) => {
-                                console.log(responseToken);
                                 this.has_started = true;
-                            }).catch(function (error) {
-                                console.log(error);
+                            }).catch((error) => {
+                                this.game_error = true;
                                 document.getElementById("btn_newGame").disabled = false; //Enable button if error
                             });
-                        }).catch(function (error) {
-                            console.log(error);
+                        }).catch((error) => {
+                            this.game_error = true;
                             document.getElementById("btn_newGame").disabled = false; //Enable button if error
                         });
                     }
@@ -183,13 +199,19 @@
                     this.isSelected = false;
                     let distance = this.distance(latlng['lat'],latlng['lng'],this.images[this.index_img]['latitude'],this.images[this.index_img]['longitude']);
                     if(distance < this.difficulty){
+                        this.score_increment = 5;
                         this.score += 5;
                     }
                     else if(distance < 2*this.difficulty){
+                        this.score_increment = 3;
                         this.score += 3;
                     }
                     else if(distance < 3*this.difficulty){
+                        this.score_increment = 1;
                         this.score += 1;
+                    }
+                    else{
+                        this.score_increment = 0;
                     }
                     this.distanceBetween = (distance / 1000).toFixed(2);
                     this.has_played = true;
@@ -220,12 +242,18 @@
 
                 /* Method used to go to the next photo */
                 next_round(){
-                    this.isSelected = false;
-                    this.has_played = false;
-                    this.index_img++;
-                    this.$children[1].chronoReset();
-                    this.$children[0].clearMap();
-                    document.getElementById('chronotime').className = "text-danger"; //Change timer color to red
+                    //Test if end of game
+                    if(this.index_img+1 === this.images.length){
+                        //End
+                    }else{
+                        this.isSelected = false;
+                        this.has_played = false;
+                        this.index_img++;
+                        this.$children[1].chronoStop();
+                        this.$children[1].chronoReset();
+                        this.$children[0].clearMap();
+                        document.getElementById('chronotime').className = "text-danger"; //Change timer color to red
+                    }
                 },
 
                 /* Methode used to validate the choice of the user (marker) */
@@ -244,8 +272,8 @@
                 getSeries(){
                     axios.get(url + "series/").then((response) => {
                         this.allSeries = response.data._embedded.series;
-                    }).catch(function (error) {
-                        console.log(error);
+                    }).catch((error) => {
+                        this.game_error = true;
                     });
                 }
             },
