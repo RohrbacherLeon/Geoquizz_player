@@ -60,7 +60,9 @@
                                     </div>
                                 </div>
                                 
-                                <button id="btn_newGame" type="submit" v-on:click="create_game" class="btn btn-primary">Nouvelle partie</button>
+                                <div class="text-right">
+                                    <button id="btn_newGame" type="submit" v-on:click="create_game" class="btn btn-primary">Nouvelle partie</button>
+                                </div>
                                 
                                 <div v-if="game_error" class="alert alert-danger text-center" role="alert">
                                     Ohoh ! Il y'a eu un problème, veuillez-réessayer ultérieurement.
@@ -87,7 +89,7 @@
         
                         <div id="right_panel" class="col-md-4 no_padding">
                             <!-- Right Menu -->
-                            <div>
+                            <div class="img-container">
                                 <img v-on:click="enlargedImage = true" class="img-fluid searchedImage" :src="this.images[index_img].url"/>
         
                                 <div v-if="enlargedImage" class="modal-container">
@@ -99,7 +101,7 @@
         
                             <div id="infos">
                                 <chronometer></chronometer>
-                                <h2>Score : {{score}}</h2>
+                                <h2 class="h2">Score : {{score}}</h2>
                                 <button v-if="has_played" class="btn btn-secondary btn-lg" @click="next_round">Photo suivante !</button>
         
                                 <p v-if="has_played && score_increment === 5" class='alert alert-success'>Bien joué, la distance est de {{distanceBetween}}km, trouvé en {{time.min}} minutes, {{time.sec}} secondes et {{time.msec}} ms. <strong>+ 5 points !</strong></p>
@@ -288,7 +290,7 @@
                         this.$children[1].chronoStop();
                         this.$children[1].chronoReset();
                         this.$children[0].clearMap();
-                        document.getElementById('chronotime').className = "text-danger"; //Change timer color to red
+                        document.getElementById('chronotime').className = "text-danger h3"; //Change timer color to red
                     }
                 },
 
@@ -301,7 +303,7 @@
                     this.time.sec = time.getSeconds();
                     this.time.min = time.getMinutes();
                     this.time.hr = time.getHours()-1;
-                    document.getElementById('chronotime').className = "text-success"; //Change timer color to green
+                    document.getElementById('chronotime').className = "text-success h3"; //Change timer color to green
                 },
 
                 /* Methode used to get all the existing series from the API */

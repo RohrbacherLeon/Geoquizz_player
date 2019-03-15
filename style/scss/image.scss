@@ -27,7 +27,12 @@
     }
 }
 
-.searchedImage{
-    cursor: zoom-in;
-    user-select: none !important;
+.img-container{
+    overflow: hidden;
+    max-height: 40%;
+
+    .searchedImage{
+        cursor: zoom-in;
+        user-select: none !important;
+    }
 }
