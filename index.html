@@ -78,8 +78,8 @@
                         <div class="col-md-8 no_padding">
                             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
                                 <a class="navbar-brand text-white" v-on:click="return_home">
-                                    <img src="./images/logo.png"  height="45" class="d-inline-block align-middle" alt="">
-                                    GeoQuizz
+                                    <img src="./images/logo_menu.png"  height="45" class="d-inline-block align-middle" alt="">
+                                    Retour à l'accueil
                                 </a>
                             </nav>
                             <!-- MAP -->
@@ -100,6 +100,7 @@
                             </div>
         
                             <div id="infos">
+                                <h4 class="h4">Recherchez cette image.</h4>
                                 <chronometer></chronometer>
                                 <h2 class="h2">Score : {{score}}</h2>
                                 <button v-if="has_played" class="btn btn-secondary btn-lg" @click="next_round">Photo suivante !</button>
