@@ -82,6 +82,10 @@ body{
     
     #player{
         display:flex;
+
+        a{
+            cursor: pointer;
+        }
     }
     
     .lmap{

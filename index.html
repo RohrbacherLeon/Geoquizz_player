@@ -19,10 +19,10 @@
         <link rel="mask-icon" href="favicon/safari-pinned-tab.svg" color="#5bbad5">
         <meta name="msapplication-TileColor" content="#da532c">
         <meta name="theme-color" content="#ffffff">
-
+        
         <script src="./script/jquery.min.js"></script> 
         <script src="./script/bootstrap.bundle.min.js"></script> 
-        <script src="./script/bootstrap.min.js"></script>
+        <script src="./script/bootstrap.min.js"></script> 
     </head>
 
     <body>
@@ -35,7 +35,7 @@
                     <transition v-if="!has_started && !is_loading" name="fade">
                         <div id="center" class="d-flex justify-content-center align-items-center">
                             <div id="new-form" class="col-md-9 no_padding">
-                                <img src="logo.png" class="logo img-fluid mx-auto d-block">
+                                <img src="./images/logo.png" class="logo img-fluid mx-auto d-block">
                                 <div class="form-row no_padding no_margin">
                                     <div class="note">
                                         <p class="h2">Commencer une nouvelle partie</p>
@@ -75,17 +75,10 @@
                     <div id="player" v-if="has_started">
                         <div class="col-md-8 no_padding">
                             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-                                <a class="navbar-brand" href="#">Navbar</a>
-                                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                                    <span class="navbar-toggler-icon"></span>
-                                </button>
-                                <div class="collapse navbar-collapse" id="navbarNav">
-                                    <ul class="navbar-nav">
-                                        <li class="nav-item active">
-                                            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                                        </li>
-                                    </ul>
-                                </div>
+                                <a class="navbar-brand text-white" v-on:click="return_home">
+                                    <img src="./images/logo.png"  height="45" class="d-inline-block align-middle" alt="">
+                                    GeoQuizz
+                                </a>
                             </nav>
                             <!-- MAP -->
                             <lmap>
@@ -209,7 +202,7 @@
                     else
                         document.getElementById("inputSerie").classList.add("is-invalid");
                     
-                    if((this.actualSerie !== "e") && (this.pseudo !== "")){
+                    if((this.actualSerie !== "") && (this.pseudo !== "")){
                         //Instanciate map
                         this.map_data.map_lat = this.actualSerie.map_lat;
                         this.map_data.map_lng = this.actualSerie.map_long;
@@ -321,6 +314,16 @@
                         this.is_loading = false;
                         this.game_error = true;
                     });
+                },
+
+                return_home(){
+                    this.$children[1].chronoStop();
+                    this.game_error = false;
+                    this.has_started = false;
+                    this.end_game = false;
+                    this.has_played = false;
+                    this.score = 0;
+                    this.score_increment = 0;
                 }
             },
         });
