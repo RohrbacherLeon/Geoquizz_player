@@ -27,12 +27,59 @@
 
     <body>
         <div id="app">
-            <section id="home">
+            <section class="d-flex justify-content-center align-items-center" v-if="end_game && !is_loading" id="end-game"> 
+                <img src="./images/logo.png" class="end-logo img-fluid no_padding ml-2">
+                <div id="new-form" class="col-md-12 no_padding">
+                    <div class="form-row no_padding no_margin">
+                        <div class="form-row col-md-12 d-flex justify-content-center align-items-center">
+                            <div class="text-center">
+                                <p class="h2">Votre score final : {{score}} point(s).</p>
+                                <button @click="end_game = false" class="btn btn-primary btn-lg mb-4">Retour à l'accueil</button>
+                            </div>
+                        </div>
+                        <div class="form-row col-md-12 no_padding no_margin">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                    <th scope="col">Meilleurs joueurs</th>
+                                    <th scope="col">Pseudo</th>
+                                    <th scope="col">Score</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">1</th>
+                                        <td>Mark</td>
+                                        <td>2000</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">2</th>
+                                        <td>Léon</td>
+                                        <td>3</td>
+                                        </tr>
+                                    <tr>
+                                        <th scope="row">3</th>
+                                        <td>Jacob</td>
+                                        <td>3</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">4</th>
+                                        <td>Larry</td>
+                                        <td>2</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="home" v-if="!end_game">
                     <div v-if="is_loading">
                         <div class="pin"></div>
                         <div class="pulse"></div>
                     </div>
-                    <transition v-if="!has_started && !is_loading" name="fade">
+                    <transition v-if="!has_started && !is_loading && !end_game" name="fade">
                         <div id="center" class="d-flex justify-content-center align-items-center">
                             <div id="new-form" class="col-md-9 no_padding">
                                 <img src="./images/logo.png" class="logo img-fluid mx-auto d-block">
@@ -111,7 +158,7 @@
                                 <p v-if="has_played && score_increment === 1" class='alert alert-danger'>Pas fou, la distance est de {{distanceBetween}}km, trouvé en {{time.min}} minutes, {{time.sec}} secondes et {{time.msec}} ms. <strong>+ 1 point !</strong></p>
                                 <p v-if="has_played && score_increment === 0" class='alert alert-secondary'>Raté, la distance est de {{distanceBetween}}km, trouvé en {{time.min}} minutes, {{time.sec}} secondes et {{time.msec}} ms. <strong>Vous ne gagnez aucun point.</strong></p>
         
-                                <p v-if="has_played" class=''>Le lieu était {{this.images[this.index_img].description}}</p>
+                                <p v-if="has_played" class=''>Le lieu était {{this.images[this.index_img].description}}.</p>
                                 <button v-if="isSelected" @click="validate_choice" class="btn btn-primary btn-lg">Valider le choix</button>
                                 <div v-if="game_error" class="alert alert-danger text-center" role="alert">
                                     Ohoh ! Il y'a eu un problème, veuillez-réessayer ultérieurement.
@@ -121,7 +168,7 @@
                     </div>
             </section>
 
-            <section class="d-flex justify-content-center align-items-center" v-if="!has_started && !is_loading" id="how-to">
+            <section class="d-flex justify-content-center align-items-center" v-if="!has_started && !is_loading && !end_game" id="how-to">
                 <div id="new-form" class="col-md-9 no_padding">
                     <div class="form-row no_padding no_margin">
                         <div class="form-group col-md-5">
@@ -149,7 +196,7 @@
         <script src="./components/lmap.js"></script> 
         <script src="./components/chronometer.js"></script> 
         <script>
-        const url = "http://a48354ff.ngrok.io/";
+        const url = "http://5f6720f9.ngrok.io/";
         new Vue({
             el: '#app',
             data: { 
@@ -189,8 +236,8 @@
             },
 
             mounted() {
+                this.end_game = true;
                 this.getSeries();
-                document.getElementById('inputDifficulty').selectedIndex = 0; //Second selected, NE FONCTIONNE PLUS ?
             },
 
             methods: { 
@@ -207,6 +254,8 @@
                         document.getElementById("inputSerie").classList.add("is-invalid");
                     
                     if((this.actualSerie !== "") && (this.pseudo !== "")){
+                        //Reset data
+                        this.score = 0;
                         //Instanciate map
                         this.map_data.map_lat = this.actualSerie.map_lat;
                         this.map_data.map_lng = this.actualSerie.map_long;
@@ -214,9 +263,8 @@
                         document.getElementById("btn_newGame").disabled = true; //Disable button, prevent multiple click
                         this.is_loading = true;
                         //Create the game
-
                         let options = {joueur: this.pseudo, serie: this.actualSerie};
-                        axios.post(url + "parties?limit=10", options).then((responsePartie) => {
+                        axios.post(url + "parties?limit=2", options).then((responsePartie) => {
                             this.images = responsePartie.data.photos;
                             //Adding image url
                             this.images.forEach(element => {
@@ -225,9 +273,9 @@
                             this.has_started = true;
                             this.is_loading = false;
                         }).catch((error) => {
+                            document.getElementById("btn_newGame").disabled = false; //Enable button if error
                             this.is_loading = false;
                             this.game_error = true;
-                            document.getElementById("btn_newGame").disabled = false; //Enable button if error
                         });
                     }
                 },
@@ -284,6 +332,10 @@
                     //Test if end of game
                     if(this.index_img+1 === this.images.length){
                         //End
+                        this.isSelected = false;
+                        this.has_played = false;
+                        this.has_started = false;
+                        this.index_img = 0;
                         this.end_game = true;
                     }else{
                         this.isSelected = false;
