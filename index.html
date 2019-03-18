@@ -27,6 +27,7 @@
 
     <body>
         <div id="app">
+            <!-- End Game Menu -->
             <section class="d-flex justify-content-center align-items-center" v-if="end_game && !is_loading" id="end-game"> 
                 <img src="./images/logo.png" class="end-logo img-fluid no_padding ml-2">
                 <div id="new-form" class="col-md-12 no_padding">
@@ -74,6 +75,7 @@
                 </div>
             </section>
 
+            <!-- MAP + RIGHT MENU -->
             <section id="home" v-if="!end_game">
                     <div v-if="is_loading">
                         <div class="pin"></div>
@@ -134,11 +136,15 @@
                             <lmap>
                             </lmap>
                         </div>
-        
+
                         <div id="right_panel" class="col-md-4 no_padding">
                             <!-- Right Menu -->
                             <div class="img-container">
-                                <img v-on:click="enlargedImage = true" class="img-fluid searchedImage" :src="this.images[index_img].url"/>
+                                <div v-if="img_is_loading">
+                                    <div class="pin"></div>
+                                    <div class="pulse"></div>
+                                </div>
+                                <img v-show="!img_is_loading" v-on:load="imgLoaded" v-on:click="enlargedImage = true" class="img-fluid searchedImage" :src="this.images[index_img].url"/>
         
                                 <div v-if="enlargedImage" class="modal-container">
                                     <div v-on:click="enlargedImage = false" class="modal-body">
@@ -168,6 +174,7 @@
                     </div>
             </section>
 
+            <!-- How to play Menu -->
             <section class="d-flex justify-content-center align-items-center" v-if="!has_started && !is_loading && !end_game" id="how-to">
                 <div id="new-form" class="col-md-9 no_padding">
                     <div class="form-row no_padding no_margin">
@@ -196,7 +203,7 @@
         <script src="./components/lmap.js"></script> 
         <script src="./components/chronometer.js"></script> 
         <script>
-        const url = "http://5f6720f9.ngrok.io/";
+        const url = "http://1b090355.ngrok.io/";
         new Vue({
             el: '#app',
             data: { 
@@ -211,6 +218,7 @@
                 allSeries : {}, //All existing series from the API
                 actualSerie: '', //Serie choosen by the user
                 is_loading: false,
+                img_is_loading: false,
                 game_error: false,
                 has_started: false,
                 end_game: false,
@@ -271,8 +279,8 @@
                             });
                             this.has_started = true;
                             this.is_loading = false;
+                            this.img_is_loading = true;
                         }).catch((error) => {
-                            document.getElementById("btn_newGame").disabled = false; //Enable button if error
                             this.is_loading = false;
                             this.game_error = true;
                         });
@@ -331,18 +339,20 @@
                     //Test if end of game
                     if(this.index_img+1 === this.images.length){
                         //End
+                        this.end_game = true;
+                        this.is_loading = false;
                         this.isSelected = false;
                         this.has_played = false;
                         this.has_started = false;
                         this.index_img = 0;
-                        this.end_game = true;
                     }else{
+                        this.img_is_loading = true;
+                        this.is_loading = true;
                         this.isSelected = false;
                         this.has_played = false;
                         this.index_img++;
                         this.$children[1].chronoStop();
                         this.$children[1].chronoReset();
-                        this.$children[0].clearMap();
                         document.getElementById('chronotime').className = "text-danger h3"; //Change timer color to red
                     }
                 },
@@ -379,6 +389,11 @@
                     this.has_played = false;
                     this.score = 0;
                     this.score_increment = 0;
+                },
+
+                imgLoaded(){
+                    this.img_is_loading = false;
+                    this.$children[0].clearMap();
                 }
             },
         });

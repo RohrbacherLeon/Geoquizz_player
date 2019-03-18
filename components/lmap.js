@@ -17,7 +17,6 @@ Vue.component('lmap',{
 
     mounted(){
         this.initMap();
-        this.addOnClick();
     },
 
     methods:{

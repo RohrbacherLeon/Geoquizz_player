@@ -14,7 +14,6 @@ Vue.component('chronometer',{
     },
 
     mounted(){
-        this.chronoStart();
     },
 
     methods:{
