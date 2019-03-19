@@ -40,8 +40,7 @@ Vue.component('lmap',{
                 iconUrl: '../images/flag.svg',
             
                 iconSize:     [38, 95], // size of the icon
-                iconAnchor:   [4, 65], // point of the icon which will correspond to marker's location
-                popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+                iconAnchor:   [3, 65], // point of the icon which will correspond to marker's location
             });
             let searchedMarker = L.marker([this.$parent.images[this.$parent.index_img]['latitude'], this.$parent.images[this.$parent.index_img]['longitude']], {icon: cIcon}).addTo(this.layerGroup);
             
