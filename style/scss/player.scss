@@ -3,6 +3,7 @@
 @import 'loader';
 @import 'scrolldown';
 
+[v-cloak] { display: none;}
 
 body{
     font-family: 'Open Sans', sans-serif;

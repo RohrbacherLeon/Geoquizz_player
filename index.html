@@ -1,4 +1,4 @@
-<!DOCTYPE <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8">
@@ -25,120 +25,120 @@
         <script src="./script/bootstrap.min.js"></script>
     </head>
 
-    <body>
-        <div id="app">
-            <section class="d-flex justify-content-center align-items-center" v-if="end_game && !is_loading" id="end-game"> 
-                <img src="./images/logo.png" class="end-logo img-fluid no_padding ml-2">
-                <div id="new-form" class="col-md-12 no_padding">
-                    <div class="form-row no_padding no_margin">
-                        <div class="form-row col-md-12 d-flex justify-content-center align-items-center">
-                            <div class="text-center">
-                                <p class="h2">Votre score final : {{score}} point(s).</p>
-                                <button @click="end_game = false" class="btn btn-primary btn-lg mb-4">Retour à l'accueil</button>
+    <body> 
+        <div id="app" v-cloak>
+            <!-- End Game Menu -->
+            <section class="d-flex justify-content-center align-items-center" v-if="end_game" id="end-game"> 
+                <div v-if="is_loading">
+                    <div class="pin"></div>
+                    <div class="pulse"></div>
+                </div>
+                <transition v-if="end_game && !is_loading" name="fade">
+                    <div>
+                        <img src="./images/logo.png" class="end-logo img-fluid no_padding ml-2">
+                        <div id="new-form" class="col-md-12 no_padding">
+                            <div class="form-row no_padding no_margin">
+                                <div class="form-row col-md-12 d-flex justify-content-center align-items-center">
+                                    <div class="text-center">
+                                        <p class="h2">Votre score final : {{score}} point(s).</p>
+                                        <button @click="end_game = false" class="btn btn-primary btn-lg mb-4">Retour à l'accueil</button>
+                                    </div>
+                                </div>
+                                <div class="form-row col-md-12 no_padding no_margin">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                            <th scope="col">Meilleurs joueurs</th>
+                                            <th scope="col">Pseudo</th>
+                                            <th scope="col">Score</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-if="scoresLoeaded" v-for="(user, index) in bestScores">
+                                                <th scope="row">{{index+1}}</th>
+                                                <td>{{user.joueur}}</td>
+                                                <td>{{user.score}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
-                        <div class="form-row col-md-12 no_padding no_margin">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                    <th scope="col">Meilleurs joueurs</th>
-                                    <th scope="col">Pseudo</th>
-                                    <th scope="col">Score</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>Mark</td>
-                                        <td>2000</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">2</th>
-                                        <td>Léon</td>
-                                        <td>3</td>
-                                        </tr>
-                                    <tr>
-                                        <th scope="row">3</th>
-                                        <td>Jacob</td>
-                                        <td>3</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">4</th>
-                                        <td>Larry</td>
-                                        <td>2</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
                     </div>
-                </div>
+                </transition>
             </section>
 
+            <!-- MAP + RIGHT MENU -->
             <section id="home" v-if="!end_game">
-                    <div v-if="is_loading">
-                        <div class="pin"></div>
-                        <div class="pulse"></div>
-                    </div>
-                    <transition v-if="!has_started && !is_loading && !end_game" name="fade">
-                        <div id="center" class="d-flex justify-content-center align-items-center">
-                            <div id="new-form" class="col-md-9 no_padding">
-                                <img src="./images/logo.png" class="logo img-fluid mx-auto d-block">
-                                <div class="form-row no_padding no_margin">
-                                    <div class="note">
-                                        <p class="h2">Commencer une nouvelle partie</p>
-                                        <p class="h4">Embarquer pour une expérience qui vous fera découvrir le monde.</p>
-                                    </div>
-                                    <div class="form-group col-md-5">
-                                        <input type="text" class="form-control" v-model="pseudo" placeholder="Pseudo" id="inputPseudo">
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <select id="inputSerie" v-model="actualSerie" class="form-control">
-                                            <option value="" disabled selected>Série</option>
-                                            <option v-for="opt in allSeries" v-bind:value="opt">{{opt.ville}}</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-md-2">
-                                        <select id="inputDifficulty" v-model="difficulty" class="form-control">
-                                            <option value="" disabled selected>Difficulté</option>
-                                            <option value="750">Facile</option>
-                                            <option value="500" >Moyen</option>
-                                            <option value="250">Dificile</option>
-                                        </select>
-                                    </div>
+                <div v-if="is_loading">
+                    <div class="pin"></div>
+                    <div class="pulse"></div>
+                </div>
+                <transition v-if="!has_started && !is_loading && !end_game" name="fade">
+                    <div id="center" class="d-flex justify-content-center align-items-center">
+                        <div id="new-form" class="col-md-9 no_padding">
+                            <img src="./images/logo.png" class="logo img-fluid mx-auto d-block">
+                            <div class="form-row no_padding no_margin">
+                                <div class="note">
+                                    <p class="h2">Commencer une nouvelle partie</p>
+                                    <p class="h4">Embarquer pour une expérience qui vous fera découvrir le monde.</p>
                                 </div>
-                                
-                                <div class="text-right">
-                                    <button id="btn_newGame" type="submit" v-on:click="create_game" class="btn btn-primary">Nouvelle partie</button>
+                                <div class="form-group col-md-5">
+                                    <input type="text" class="form-control" v-model="pseudo" placeholder="Pseudo" id="inputPseudo">
                                 </div>
-                                
-                                <div v-if="game_error" class="alert alert-danger text-center" role="alert">
-                                    Ohoh ! Il y'a eu un problème, veuillez-réessayer ultérieurement.
+                                <div class="form-group col-md-4">
+                                    <select id="inputSerie" v-model="actualSerie" class="form-control">
+                                        <option value="" disabled selected>Série</option>
+                                        <option v-for="opt in allSeries" v-bind:value="opt">{{opt.ville}}</option>
+                                    </select>
                                 </div>
-
-                                <div class="alert alert-success text-center">
-                                    Pour savoir comment jouer &darr;
+                                <div class="form-group col-md-2">
+                                    <select id="inputDifficulty" v-model="difficulty" class="form-control">
+                                        <option value="" disabled selected>Difficulté</option>
+                                        <option value="750">Facile</option>
+                                        <option value="500" >Moyen</option>
+                                        <option value="250">Dificile</option>
+                                    </select>
                                 </div>
                             </div>
-                            <a href="#how-to" class="scroll-down" address="true"></a>
+                            
+                            <div class="text-right">
+                                <button id="btn_newGame" type="submit" v-on:click="create_game" class="btn btn-primary">Nouvelle partie</button>
+                            </div>
+                            
+                            <div v-if="game_error" class="alert alert-danger text-center" role="alert">
+                                Ohoh ! Il y'a eu un problème, veuillez-réessayer ultérieurement.
+                            </div>
+
+                            <div class="alert alert-success text-center">
+                                <p class="h4">&darr; Pour savoir comment jouer &darr;</p>
+                            </div>
                         </div>
-                    </transition>
-                    <div id="player" v-if="has_started">
+                        <a href="#how-to" class="scroll-down" address="true"></a>
+                    </div>
+                </transition>
+                <!-- Game -->
+                <div v-if="has_started">
+                    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                        <a class="navbar-brand text-white" v-on:click="return_home">
+                            <img src="./images/logo_menu.png"  height="45" class="d-inline-block align-middle" alt="">
+                        </a>
+                    </nav>
+                    <div id="player">
                         <div class="col-md-8 no_padding">
-                            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-                                <a class="navbar-brand text-white" v-on:click="return_home">
-                                    <img src="./images/logo_menu.png"  height="45" class="d-inline-block align-middle" alt="">
-                                    Retour à l'accueil
-                                </a>
-                            </nav>
                             <!-- MAP -->
                             <lmap>
                             </lmap>
                         </div>
-        
+
                         <div id="right_panel" class="col-md-4 no_padding">
                             <!-- Right Menu -->
                             <div class="img-container">
-                                <img v-on:click="enlargedImage = true" class="img-fluid searchedImage" :src="this.images[index_img].url"/>
+                                <div v-if="img_is_loading">
+                                    <div class="pin"></div>
+                                    <div class="pulse"></div>
+                                </div>
+                                <img v-show="!img_is_loading" v-on:load="imgLoaded" v-on:click="enlargedImage = true" class="img-fluid searchedImage" :src="this.images[index_img].url"/>
         
                                 <div v-if="enlargedImage" class="modal-container">
                                     <div v-on:click="enlargedImage = false" class="modal-body">
@@ -148,14 +148,14 @@
                             </div>
         
                             <div id="infos">
-                                <h4 class="h4">Recherchez cette image.</h4>
+                                <h4 v-show="!img_is_loading" class="h4">Recherchez cette image.</h4>
                                 <chronometer></chronometer>
                                 <h2 class="h2">Score : {{score}}</h2>
                                 <button v-if="has_played" class="btn btn-secondary btn-lg" @click="next_round">Photo suivante !</button>
         
-                                <p v-if="has_played && score_increment === 5" class='alert alert-success'>Bien joué, la distance est de {{distanceBetween}}km, trouvé en {{time.min}} minutes, {{time.sec}} secondes et {{time.msec}} ms. <strong>+ 5 points !</strong></p>
-                                <p v-if="has_played && score_increment === 3" class='alert alert-warning'>Presque, la distance est de {{distanceBetween}}km, trouvé en {{time.min}} minutes, {{time.sec}} secondes et {{time.msec}} ms. <strong>+ 3 points !</strong></p>
-                                <p v-if="has_played && score_increment === 1" class='alert alert-danger'>Pas fou, la distance est de {{distanceBetween}}km, trouvé en {{time.min}} minutes, {{time.sec}} secondes et {{time.msec}} ms. <strong>+ 1 point !</strong></p>
+                                <p v-if="has_played && score_increment === 5" class='alert alert-success'>Bien joué, la distance est de {{distanceBetween}}km, trouvé en {{time.min}} minutes, {{time.sec}} secondes et {{time.msec}} ms. <strong>+ {{scoreAdding}} points !</strong></p>
+                                <p v-if="has_played && score_increment === 3" class='alert alert-warning'>Presque, la distance est de {{distanceBetween}}km, trouvé en {{time.min}} minutes, {{time.sec}} secondes et {{time.msec}} ms. <strong>+ {{scoreAdding}} points !</strong></p>
+                                <p v-if="has_played && score_increment === 1" class='alert alert-danger'>Pas fou, la distance est de {{distanceBetween}}km, trouvé en {{time.min}} minutes, {{time.sec}} secondes et {{time.msec}} ms. <strong>+ {{scoreAdding}} point !</strong></p>
                                 <p v-if="has_played && score_increment === 0" class='alert alert-secondary'>Raté, la distance est de {{distanceBetween}}km, trouvé en {{time.min}} minutes, {{time.sec}} secondes et {{time.msec}} ms. <strong>Vous ne gagnez aucun point.</strong></p>
         
                                 <p v-if="has_played" class=''>Le lieu était {{this.images[this.index_img].description}}.</p>
@@ -166,8 +166,10 @@
                             </div>
                         </div>
                     </div>
+                </div>
             </section>
 
+            <!-- How to play Menu -->
             <section class="d-flex justify-content-center align-items-center" v-if="!has_started && !is_loading && !end_game" id="how-to">
                 <div id="new-form" class="col-md-9 no_padding">
                     <div class="form-row no_padding no_margin">
@@ -191,26 +193,26 @@
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
         <!-- <script src="./script/vue.min.js"></script> -->
         <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script> 
-        <!-- <script src="https://unpkg.com/axios/dist/axios.js"></script> -->
         <script src="./script/axios.min.js"></script>
         <script src="./components/lmap.js"></script> 
         <script src="./components/chronometer.js"></script> 
         <script>
-        const url = "http://5f6720f9.ngrok.io/";
+        const url = "http://localhost:8084/";
         new Vue({
             el: '#app',
             data: { 
                 enlargedImage: false,
                 game_id: '',
-                token: '',
                 images: [
                 ],
                 index_img: 0,
+                partie:{},
                 //Game
                 pseudo: '',
                 allSeries : {}, //All existing series from the API
                 actualSerie: '', //Serie choosen by the user
                 is_loading: false,
+                img_is_loading: false,
                 game_error: false,
                 has_started: false,
                 end_game: false,
@@ -218,6 +220,7 @@
                 isSelected: false,
                 distanceBetween: 0,
                 score: 0,
+                scoreAdding: 0,
                 score_increment: 0,
                 difficulty: 500,
                 time: {
@@ -226,6 +229,8 @@
                     hr:0,
                     msec:0
                 },
+                bestScores: {},
+                scoresLoeaded: false,
                 //Map
                 map_data:{
                     map_lat:48.6937223,
@@ -255,6 +260,7 @@
                     if((this.actualSerie !== "") && (this.pseudo !== "")){
                         //Reset data
                         this.score = 0;
+                        this.scoresLoeaded = false;
                         //Instanciate map
                         this.map_data.map_lat = this.actualSerie.map_lat;
                         this.map_data.map_lng = this.actualSerie.map_long;
@@ -263,16 +269,17 @@
                         this.is_loading = true;
                         //Create the game
                         let options = {joueur: this.pseudo, serie: this.actualSerie};
-                        axios.post(url + "parties?limit=2", options).then((responsePartie) => {
+                        axios.post(url + "parties?limit=10", options).then((responsePartie) => {
                             this.images = responsePartie.data.photos;
+                            this.partie = responsePartie.data;
                             //Adding image url
                             this.images.forEach(element => {
                                 element.url = url + "photos/" + element.url;
                             });
                             this.has_started = true;
                             this.is_loading = false;
+                            this.img_is_loading = true;
                         }).catch((error) => {
-                            document.getElementById("btn_newGame").disabled = false; //Enable button if error
                             this.is_loading = false;
                             this.game_error = true;
                         });
@@ -283,24 +290,50 @@
                 @Param latlng Lat and lng of the point */
                 submit_choice(latlng){
                     this.isSelected = false;
+                    this.scoreAdding = 0;
+                    //Score by distance
                     let distance = this.distance(latlng['lat'],latlng['lng'],this.images[this.index_img]['latitude'],this.images[this.index_img]['longitude']);
                     if(distance < this.difficulty){
                         this.score_increment = 5;
-                        this.score += 5;
+                        this.scoreAdding += 5;
                     }
                     else if(distance < 2*this.difficulty){
                         this.score_increment = 3;
-                        this.score += 3;
+                        this.scoreAdding += 3;
                     }
                     else if(distance < 3*this.difficulty){
                         this.score_increment = 1;
-                        this.score += 1;
+                        this.scoreAdding += 1;
                     }
                     else{
                         this.score_increment = 0;
                     }
+                    //Score by time (x4 if < 5s, w2 if < 10s, x0 if > 20s)
+                    if(this.time.sec < 5 && this.time.min < 0){
+                        this.scoreAdding *= 4;
+                    }
+                    else if(this.time.sec < 10 && this.time.min < 0){
+                        this.scoreAdding *= 2;
+                    }
+                    else if(this.time.sec > 20 || this.time.min > 0){
+                        this.scoreAdding = 0;
+                        this.score_increment = 0;
+                    }
+                    this.score += this.scoreAdding;
                     this.distanceBetween = (distance / 1000).toFixed(2);
                     this.has_played = true;
+                },
+
+                /* Methode used to validate the choice of the user (marker) */
+                validate_choice(){
+                    this.$children[1].chronoStop();
+                    let time = this.$children[1].diff;
+                    this.time.msec = time.getMilliseconds();
+                    this.time.sec = time.getSeconds();
+                    this.time.min = time.getMinutes();
+                    this.time.hr = time.getHours()-1;
+                    document.getElementById('chronotime').className = "text-success h3"; //Change timer color to green     
+                    this.$children[0].validate_choice();
                 },
 
                 /* Method used to get the distance (in metter) of 2 points (lat, lng) */
@@ -326,51 +359,61 @@
                     return degrees * (pi/180);
                 },
 
-                /* Method used to go to the next photo */
-                next_round(){
-                    //Test if end of game
-                    if(this.index_img+1 === this.images.length){
-                        //End
-                        this.isSelected = false;
-                        this.has_played = false;
-                        this.has_started = false;
-                        this.index_img = 0;
-                        this.end_game = true;
-                    }else{
-                        this.isSelected = false;
-                        this.has_played = false;
-                        this.index_img++;
-                        this.$children[1].chronoStop();
-                        this.$children[1].chronoReset();
-                        this.$children[0].clearMap();
-                        document.getElementById('chronotime').className = "text-danger h3"; //Change timer color to red
-                    }
-                },
-
-                /* Methode used to validate the choice of the user (marker) */
-                validate_choice(){
-                    this.$children[0].validate_choice();
-                    this.$children[1].chronoStop();
-                    let time = this.$children[1].diff;
-                    this.time.msec = time.getMilliseconds();
-                    this.time.sec = time.getSeconds();
-                    this.time.min = time.getMinutes();
-                    this.time.hr = time.getHours()-1;
-                    document.getElementById('chronotime').className = "text-success h3"; //Change timer color to green
-                },
-
-                /* Methode used to get all the existing series from the API */
-                getSeries(){
+                /* Method save_score used to update the score of the player in the API */
+                save_score(){
                     this.is_loading = true;
-                    axios.get(url + "series/").then((response) => {
-                        this.allSeries = response.data._embedded.series;
-                        this.is_loading = false;
+                    this.partie.score = this.score;
+                    this.partie.serie = this.actualSerie;
+                    axios.put(url + "parties/" + this.partie.id, this.partie, {headers: {'x-token': this.partie.token}}).then((response) => {
+                        this.getBestScores();
                     }).catch((error) => {
                         this.is_loading = false;
                         this.game_error = true;
                     });
                 },
 
+                /* Method used to go to the next photo */
+                next_round(){
+                    //Test if end of game
+                    if(this.index_img+1 === this.images.length){
+                        this.save_score();
+                        //End
+                        this.end_game = true;
+                        this.is_loading = false;
+                        this.isSelected = false;
+                        this.has_played = false;
+                        this.has_started = false;
+                        this.index_img = 0;
+                    }else{
+                        this.img_is_loading = true;
+                        this.is_loading = true;
+                        this.isSelected = false;
+                        this.has_played = false;
+                        this.index_img++;
+                        this.$children[1].chronoStop();
+                        this.$children[1].chronoReset();
+                        document.getElementById('chronotime').className = "text-danger h3"; //Change timer color to red
+                    }
+                },
+
+                /* Methode used to get all the existing series from the API */
+                getSeries(){
+                    this.is_loading = true;
+                    axios.get(url + "series").then((response) => {
+                        this.allSeries = response.data._embedded.series;
+                        this.is_loading = false;
+
+                        //remove Awaiting_data
+                        this.allSeries = this.allSeries.filter(function(item) { 
+                            return item.ville !== 'Awaiting_data';  
+                        });
+                    }).catch((error) => {
+                        this.is_loading = false;
+                        this.game_error = true;
+                    });
+                },
+
+                /* Method return_home called when user want to go to home */
                 return_home(){
                     this.$children[1].chronoStop();
                     this.game_error = false;
@@ -379,6 +422,37 @@
                     this.has_played = false;
                     this.score = 0;
                     this.score_increment = 0;
+                },
+
+                /* Method imgLoaded called when img is fully loaded */
+                imgLoaded(){
+                    this.img_is_loading = false;
+                    this.$children[0].clearMap();
+                },
+
+                /* Method getBestScores used to get the best score array of the serie */
+                getBestScores(){
+                    this.is_loading = true;
+                    axios.get(url + "parties?byScore=true").then((response) => {
+                        this.bestScores = response.data;
+                        //Sort by score desc
+                        this.sortByKeyDesc(this.bestScores, 'score');
+                        this.bestScores = this.bestScores.slice(0,10);
+                        this.scoresLoeaded = true;
+                        this.is_loading = false;
+                    }).catch((error) => {
+                        this.is_loading = false;
+                        this.game_error = true;
+                    });
+                },
+
+                /* Method sortByKeyDesc used to sort an array desc */
+                sortByKeyDesc(array, key) {
+                    return array.sort(function (a, b) {
+                        let x = a[key]; 
+                        let y = b[key];
+                        return ((x > y) ? -1 : ((x < y) ? 1 : 0));
+                    });
                 }
             },
         });
