@@ -17,7 +17,7 @@ Vue.component('chronometer',{
     },
 
     methods:{
-
+        /* Method chrono used to initialize the chronometer */
         chrono(){
             this.end = new Date();
             this.diff = this.end - this.start;
@@ -41,19 +41,23 @@ Vue.component('chronometer',{
             document.getElementById("chronotime").innerHTML = min + ":" + sec + ":" + msec;
             this.timerID = setTimeout(this.chrono, 100);
         },
+        /* Method chronoStart used to start the chrono */
         chronoStart(){
             this.start = new Date();
             this.chrono();
         },
+        /* Method chronoContinue used to start the chrono after a stop */
         chronoContinue(){
             this.start = new Date()-this.diff;
             this.start = new Date(this.start);
             this.chrono();
         },
+        /* Method chronoReset used to reset the chrono */
         chronoReset(){
-            document.getElementById("chronotime").innerHTML = "0:00:00:000";
+            document.getElementById("chronotime").innerHTML = "00:00:000";
             this.start = new Date();
         },
+        /* Method chronoStop used to stop the chrono */
         chronoStop(){
             clearTimeout(this.timerID);
         }
