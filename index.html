@@ -188,8 +188,8 @@
         </div>  
 
 
-        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-        <!-- <script src="./script/vue.min.js"></script> -->
+        <!-- <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> -->
+        <script src="./script/vue.min.js"></script>
         <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script> 
         <script src="./script/axios.min.js"></script>
         <script src="./components/lmap.js"></script> 
@@ -427,6 +427,7 @@
                     this.$children[0].clearMap();
                 },
 
+                /* Method getBestScores used to get the best score array of the serie */
                 getBestScores(){
                     this.is_loading = true;
                     axios.get(url + "parties?byScore=true").then((response) => {
