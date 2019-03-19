@@ -1,6 +1,6 @@
 Vue.component('chronometer',{
     template:`
-        <span class="text-danger h3" id="chronotime">0:00:00:00</span>  
+        <span class="text-danger h3" id="chronotime">00:00:00</span>  
     `,
 
     data(){
@@ -38,7 +38,7 @@ Vue.component('chronometer',{
             else if(msec < 100){
                 msec = "0" +msec;
             }
-            document.getElementById("chronotime").innerHTML = hr + ":" + min + ":" + sec + ":" + msec;
+            document.getElementById("chronotime").innerHTML = min + ":" + sec + ":" + msec;
             this.timerID = setTimeout(this.chrono, 100);
         },
         chronoStart(){

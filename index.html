@@ -117,14 +117,13 @@
                             <a href="#how-to" class="scroll-down" address="true"></a>
                         </div>
                     </transition>
+                    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                        <a class="navbar-brand text-white" v-on:click="return_home">
+                            <img src="./images/logo_menu.png"  height="45" class="d-inline-block align-middle" alt="">
+                        </a>
+                    </nav>
                     <div id="player" v-if="has_started">
                         <div class="col-md-8 no_padding">
-                            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-                                <a class="navbar-brand text-white" v-on:click="return_home">
-                                    <img src="./images/logo_menu.png"  height="45" class="d-inline-block align-middle" alt="">
-                                    Retour à l'accueil
-                                </a>
-                            </nav>
                             <!-- MAP -->
                             <lmap>
                             </lmap>
@@ -307,13 +306,13 @@
                         this.score_increment = 0;
                     }
                     //Score by time (x4 if < 5s, w2 if < 10s, x0 if > 20s)
-                    if(this.time.sec < 5){
+                    if(this.time.sec < 5 && this.time.min < 0){
                         this.scoreAdding *= 4;
                     }
-                    else if(this.time.sec < 10){
+                    else if(this.time.sec < 10 && this.time.min < 0){
                         this.scoreAdding *= 2;
                     }
-                    else if(this.time.sec > 20){
+                    else if(this.time.sec > 20 || this.time.min > 0){
                         this.scoreAdding = 0;
                         this.score_increment = 0;
                     }
