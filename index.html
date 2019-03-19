@@ -191,7 +191,6 @@
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
         <!-- <script src="./script/vue.min.js"></script> -->
         <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script> 
-        <!-- <script src="https://unpkg.com/axios/dist/axios.js"></script> -->
         <script src="./script/axios.min.js"></script>
         <script src="./components/lmap.js"></script> 
         <script src="./components/chronometer.js"></script> 
@@ -268,7 +267,7 @@
                         this.is_loading = true;
                         //Create the game
                         let options = {joueur: this.pseudo, serie: this.actualSerie};
-                        axios.post(url + "parties?limit=2", options).then((responsePartie) => {
+                        axios.post(url + "parties?limit=10", options).then((responsePartie) => {
                             this.images = responsePartie.data.photos;
                             this.partie = responsePartie.data;
                             //Adding image url
