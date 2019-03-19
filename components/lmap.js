@@ -35,7 +35,16 @@ Vue.component('lmap',{
 
         validate_choice(){
             this.map.off('click');
-            let searchedMarker = L.marker([this.$parent.images[this.$parent.index_img]['latitude'], this.$parent.images[this.$parent.index_img]['longitude']]).addTo(this.layerGroup);
+
+            let cIcon = L.icon({
+                iconUrl: '../images/flag.svg',
+            
+                iconSize:     [38, 95], // size of the icon
+                iconAnchor:   [4, 65], // point of the icon which will correspond to marker's location
+                popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+            });
+            let searchedMarker = L.marker([this.$parent.images[this.$parent.index_img]['latitude'], this.$parent.images[this.$parent.index_img]['longitude']], {icon: cIcon}).addTo(this.layerGroup);
+            
             let coord = Array();
             coord.push(searchedMarker.getLatLng());
             coord.push(this.selectedMarker.getLatLng());

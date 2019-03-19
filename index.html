@@ -26,11 +26,6 @@
     </head>
 
     <body> 
-        <!-- While all is loaded, display loader -->
-        <div v-pre>
-            <div class="pin"></div>
-            <div class="pulse"></div>
-        </div>
         <div id="app" v-cloak>
             <!-- End Game Menu -->
             <section class="d-flex justify-content-center align-items-center" v-if="end_game" id="end-game"> 
@@ -322,7 +317,7 @@
                         this.scoreAdding = 0;
                         this.score_increment = 0;
                     }
-                    this.score =+ this.scoreAdding;
+                    this.score += this.scoreAdding;
                     this.distanceBetween = (distance / 1000).toFixed(2);
                     this.has_played = true;
                 },
@@ -367,11 +362,7 @@
                     this.is_loading = true;
                     this.partie.score = this.score;
                     this.partie.serie = this.actualSerie;
-                    this.partie.photos.forEach((e) => {
-                        e.serie = this.actualSerie;
-                    });
                     axios.put(url + "parties/" + this.partie.id, this.partie, {headers: {'x-token': this.partie.token}}).then((response) => {
-                        // console.log(response);
                         this.getBestScores();
                     }).catch((error) => {
                         this.is_loading = false;
@@ -409,6 +400,11 @@
                     axios.get(url + "series").then((response) => {
                         this.allSeries = response.data._embedded.series;
                         this.is_loading = false;
+
+                        //remove Awaiting_data
+                        this.allSeries = this.allSeries.filter(function(item) { 
+                            return item.ville !== 'Awaiting_data';  
+                        });
                     }).catch((error) => {
                         this.is_loading = false;
                         this.game_error = true;
@@ -439,7 +435,7 @@
                         this.bestScores = response.data;
                         //Sort by score desc
                         this.sortByKeyDesc(this.bestScores, 'score');
-
+                        this.bestScores = this.bestScores.slice(0,10);
                         this.scoresLoeaded = true;
                         this.is_loading = false;
                     }).catch((error) => {
