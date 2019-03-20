@@ -141,7 +141,7 @@
                                     <div class="pin"></div>
                                     <div class="pulse"></div>
                                 </div>
-                                <img v-show="!img_is_loading" v-on:load="imgLoaded" v-on:click="enlargedImage = true" class="img-fluid searchedImage" :src="this.images[index_img].url"/>
+                                <img v-show="!img_is_loading" v-on:load="imgLoaded" v-on:click="enlargedImage = true" class="searchedImage" :src="this.images[index_img].url"/>
         
                                 <div v-if="enlargedImage" class="modal-container">
                                     <div v-on:click="enlargedImage = false" class="modal-body">
@@ -200,7 +200,7 @@
         <script src="./components/lmap.js"></script> 
         <script src="./components/chronometer.js"></script> 
         <script>
-        const url = "http://localhost:8084/";
+        const url = "http://3775bdcd.ngrok.io/";
         new Vue({
             el: '#app',
             data: { 

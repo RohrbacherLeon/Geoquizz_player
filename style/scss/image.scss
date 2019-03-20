@@ -29,10 +29,14 @@
 
 .img-container{
     overflow: hidden;
-    max-height: 30%;
+    max-height: 35%;
 
     .searchedImage{
+        display: block;
+        margin: 0 auto;
         cursor: zoom-in;
+        max-height: 100%;
+        width: auto;
         user-select: none !important;
     }
 }
