@@ -124,6 +124,7 @@
                         <a class="navbar-brand text-white" v-on:click="return_home">
                             <img src="./images/logo_menu.png"  height="45" class="d-inline-block align-middle" alt="">
                         </a>
+                        <p class="h4 text-white">{{actualSerie.ville}}</p>
                     </nav>
                     <div id="player">
                         
@@ -440,7 +441,7 @@
                         this.is_loading = false;
                         this.bestScores = response.data;
                         //Sort by score desc
-                        this.sortByKeyDesc(this.bestScores, 'score');
+                        // this.sortByKeyDesc(this.bestScores, 'score');
                         this.bestScores = this.bestScores.slice(0,10);
                         this.scoresLoeaded = true;
                     }).catch((error) => {
