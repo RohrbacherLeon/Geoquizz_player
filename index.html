@@ -41,6 +41,7 @@
                                 <div class="form-row col-md-12 d-flex justify-content-center align-items-center">
                                     <div class="text-center">
                                         <p class="h2">Votre score final : {{score}} point(s).</p>
+                                        <p class="h4">Série : {{actualSerie.ville}}.</p>
                                         <button @click="end_game = false" class="btn btn-primary btn-lg mb-4">Retour à l'accueil</button>
                                     </div>
                                 </div>
@@ -118,13 +119,14 @@
                     </div>
                 </transition>
                 <!-- Game -->
-                <div v-if="has_started">
+                <div class="player-container" v-if="has_started">
                     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
                         <a class="navbar-brand text-white" v-on:click="return_home">
                             <img src="./images/logo_menu.png"  height="45" class="d-inline-block align-middle" alt="">
                         </a>
                     </nav>
                     <div id="player">
+                        
                         <div class="col-md-8 no_padding">
                             <!-- MAP -->
                             <lmap>
@@ -309,10 +311,10 @@
                         this.score_increment = 0;
                     }
                     //Score by time (x4 if < 5s, w2 if < 10s, x0 if > 20s)
-                    if(this.time.sec < 5 && this.time.min < 0){
+                    if(this.time.sec < 5 && this.time.min < 1){
                         this.scoreAdding *= 4;
                     }
-                    else if(this.time.sec < 10 && this.time.min < 0){
+                    else if(this.time.sec < 10 && this.time.min < 1){
                         this.scoreAdding *= 2;
                     }
                     else if(this.time.sec > 20 || this.time.min > 0){
@@ -364,6 +366,7 @@
                     this.is_loading = true;
                     this.partie.score = this.score;
                     this.partie.serie = this.actualSerie;
+                    this.partie.status = 1; //Ended = 1
                     axios.put(url + "parties/" + this.partie.id, this.partie, {headers: {'x-token': this.partie.token}}).then((response) => {
                         this.getBestScores();
                     }).catch((error) => {
@@ -434,12 +437,12 @@
                 getBestScores(){
                     this.is_loading = true;
                     axios.get(url + "parties?byScore=true").then((response) => {
+                        this.is_loading = false;
                         this.bestScores = response.data;
                         //Sort by score desc
                         this.sortByKeyDesc(this.bestScores, 'score');
                         this.bestScores = this.bestScores.slice(0,10);
                         this.scoresLoeaded = true;
-                        this.is_loading = false;
                     }).catch((error) => {
                         this.is_loading = false;
                         this.game_error = true;
